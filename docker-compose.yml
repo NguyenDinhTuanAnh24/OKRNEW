@@ -1,0 +1,24 @@
+version: "3.8"
+services:
+    db:
+        image: mysql:latest
+        container_name: mysql_db
+        environment:
+            MYSQL_ROOT_PASSWORD: Tuananh2k5@
+            MYSQL_DATABASE: okrdb
+            MYSQL_USER: root
+            MYSQL_PASSWORD: Tuananh2k5@
+        ports:
+            - "3306:3306"
+        volumes:
+            - db_data:/var/lib/mysql
+        networks:
+            - app-network
+        restart: unless-stopped
+
+volumes:
+    db_data:
+
+networks:
+    app-network:
+        driver: bridge
