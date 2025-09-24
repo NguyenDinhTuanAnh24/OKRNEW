@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('cycles', function (Blueprint $table) {
             $table->id('cycle_id');
-            $table->string('name')->nullable();
+            $table->string('cycle_name')->nullable();
             $table->dateTime('start_date')->nullable();
             $table->dateTime('end_date')->nullable();
             $table->string('status')->nullable();

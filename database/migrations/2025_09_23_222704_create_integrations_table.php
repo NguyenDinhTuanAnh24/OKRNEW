@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('integrations', function (Blueprint $table) {
             $table->id('integration_id');
-            $table->string('name');
+            $table->string('integration_name');
             $table->string('description')->nullable();
             $table->string('status')->nullable();
         });

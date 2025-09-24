@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('objectives', function (Blueprint $table) {
             $table->id('objective_id');
-            $table->string('objTitle');
+            $table->string('obj_title');
             $table->string('description')->nullable();
             $table->string('status')->nullable();
             $table->decimal('progress_percent', 5, 2)->default(0);
