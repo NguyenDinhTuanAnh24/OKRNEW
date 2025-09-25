@@ -2,47 +2,35 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    protected $primaryKey = 'user_id'; // Sử dụng user_id làm khóa chính
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
-        'name',
         'email',
-        'password',
+        'sub',
+        'full_name',
+        'phone',
+        'job_title',
+        'avatar_url',
+        'department_id',
+        'role_id',
+        'google_id',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    // Bỏ password_hash vì Cognito quản lý mật khẩu
+    protected $hidden = ['password_hash'];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    // Quan hệ với bảng departments và roles
+    public function department()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->belongsTo(Department::class, 'department_id', 'department_id');
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'role_id', 'role_id');
     }
 }

@@ -34,5 +34,9 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    'cognito' => [
+        'client_id' => env('AWS_COGNITO_CLIENT_ID', '3ar8acocnqav49qof9qetdj2dj'),
+        'domain' => env('AWS_COGNITO_DOMAIN', 'https://ap-southeast-2rqig6bh9c.auth.ap-southeast-2.amazoncognito.com'),
+    ],
 
 ];
