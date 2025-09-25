@@ -45,7 +45,7 @@
 		.brand{font-size:22px;font-weight:800;color:var(--ink)}
 		.nav a.link{color:var(--ink);padding:10px 12px;border-radius:10px}
 		.nav a.link:hover{background:#f5f7fb}
-		.nav .right{margin-left:auto;display:flex;gap:10px}
+		.nav .right{margin-left:auto;display:flex;gap:10px;align-items:center}
 		.btn{display:inline-flex;align-items:center;gap:8px;border-radius:10px;padding:10px 16px;font-weight:700}
 		.btn-primary{background:var(--btn-primary);color:#fff;box-shadow:var(--shadow)}
 		.btn-primary:hover{background:var(--btn-primary-hover)}
@@ -94,6 +94,23 @@
 		.alert.success{color:#16a34a}
 		.alert.error{color:#dc2626}
 		.info p{margin:8px 0}
+
+		/* avatar + dropdown */
+		.profile{ position:relative; }
+		.profile summary{ list-style:none; cursor:pointer; display:inline-flex; align-items:center; border:1px solid rgba(0,0,0,.06); background:#fff; padding:4px; border-radius:999px; }
+		.profile summary::-webkit-details-marker{ display:none; }
+		.avatar{ width:36px; height:36px; border-radius:50%; object-fit:cover; display:block; }
+		.menu{
+			position:absolute; right:0; top:48px; min-width:240px;
+			background:#fff; color:#0b1320; border:1px solid #e7eaf0; border-radius:12px;
+			box-shadow:0 10px 30px rgba(0,0,0,.08); padding:12px; z-index:50;
+		}
+		.menu .row{ display:flex; gap:12px; align-items:center; }
+		.menu .name{ font-weight:800; }
+		.menu .email{ color:#5b6474; font-size:13px; }
+		.menu .line{ height:1px; background:#f0f2f6; margin:10px 0; }
+		.menu a{ display:block; padding:8px 10px; border-radius:8px; color:#0b1320; text-decoration:none; }
+		.menu a:hover{ background:#f7f8fb; }
 	</style>
 </head>
 <body>
@@ -109,8 +126,30 @@
 			<a class="link" href="#">Khách hàng</a>
 			<div class="right">
 				<a class="btn btn-ghost" href="#">Tư vấn 1:1</a>
+
 				@auth
-					<a class="btn btn-primary" href="{{ route('auth.logout') }}">Đăng xuất</a>
+					@php
+						$avatar = auth()->user()->avatar_url ?: 'https://www.gravatar.com/avatar/'.md5(strtolower(trim(auth()->user()->email))).'?s=200&d=identicon';
+					@endphp
+
+					<!-- Avatar + Dropdown -->
+					<details class="profile">
+						<summary>
+							<img class="avatar" src="{{ $avatar }}" alt="avatar">
+						</summary>
+						<div class="menu">
+							<div class="row" style="margin-bottom:10px">
+								<img class="avatar" src="{{ $avatar }}" alt="avatar">
+								<div>
+									<div class="name">{{ auth()->user()->full_name ?? 'Chưa cập nhật' }}</div>
+									<div class="email">{{ auth()->user()->email }}</div>
+								</div>
+							</div>
+							<div class="line"></div>
+							<a href="{{ route('dashboard') }}">Hồ sơ / Trang của tôi</a>
+							<a href="{{ route('auth.logout') }}">Đăng xuất</a>
+						</div>
+					</details>
 				@else
 					<a class="btn btn-primary" href="{{ route('auth.redirect') }}">Đăng nhập</a>
 				@endauth
@@ -119,7 +158,7 @@
 	</div>
 
 	@auth
-		<!-- ĐÃ ĐĂNG NHẬP: hiển thị thông tin (chức năng giữ nguyên) -->
+		<!-- ĐÃ ĐĂNG NHẬP: hiển thị thông tin -->
 		<div class="container">
 			<div class="card info">
 				<div class="kicker">Đăng nhập thành công</div>
@@ -134,9 +173,6 @@
 				@if (auth()->user()->avatar_url)
 					<p><img src="{{ auth()->user()->avatar_url }}" alt="Avatar" style="width:72px;height:72px;border-radius:50%;border:3px solid #ffe0e0"></p>
 				@endif
-				<div style="margin-top:12px">
-					<a class="btn btn-primary" href="{{ route('auth.logout') }}">Đăng xuất</a>
-				</div>
 			</div>
 		</div>
 	@else
@@ -156,7 +192,7 @@
 			</div>
 		</section>
 
-		<!-- Khối “More” + vùng nội dung thêm, vẫn giữ layout trang -->
+		<!-- Khối “More” -->
 		<div class="container">
 			<div class="row">
 				<div class="card">
@@ -168,7 +204,7 @@
 					</ul>
 				</div>
 				<div class="card">
-					<h3 style="margin-top:0">More</h3>
+					<h3 style="margin-top:0)">More</h3>
 					<p style="color:var(--muted)">Phân quyền, cộng tác, khuyến nghị OKR bằng AI…</p>
 				</div>
 			</div>
@@ -176,7 +212,7 @@
 			@if (session('success')) <div class="alert success">{{ session('success') }}</div> @endif
 			@if (session('error'))   <div class="alert error">{{ session('error') }}</div>   @endif
 		</div>
-	@endauth>
+	@endauth
 
 </body>
 </html>
