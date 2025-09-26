@@ -3,214 +3,659 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Dashboard</title>
+	<title>OKR | FOCUS</title>
 	<style>
-		:root{
-			/* màu chủ đạo theo ảnh (có thể đổi ở đây) */
-			--brand:#ef6f70;          /* nền hero */
-			--brand-dark:#e45f60;     /* hover/đậm hơn */
-			--ink:#0b1320;           /* chữ đậm */
-			--muted:#5b6474;         /* chữ phụ */
-			--white:#ffffff;
-			--nav-bg:#ffffff;
-			--nav-border:#e7eaf0;
-			--btn-primary:#ff7b7c;   /* nút nổi */
-			--btn-primary-hover:#ff686a;
-			--btn-ghost:#ffffff;
-			--btn-ghost-text:#ef6f70;
-			--btn-ghost-border:#ffd2d2;
-			--card:#ffffff;
-			--shadow:0 10px 30px rgba(0,0,0,.08);
-		}
-		*{box-sizing:border-box}
-		html,body{margin:0;padding:0}
-		body{
-			font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-			background:#fafbff;color:var(--ink);
-		}
-		a{text-decoration:none}
-
-		/* NAVBAR (full-width) */
-		.nav-wrap{
-			margin-left: calc(50% - 50vw);
-			margin-right: calc(50% - 50vw);
-			width: 100vw;
-			background:var(--nav-bg);
-			border-bottom:1px solid var(--nav-border);
-		}
-		.nav{
-			max-width:1200px;margin:0 auto;display:flex;align-items:center;
-			gap:22px;padding:14px 18px;
-		}
-		.brand{font-size:22px;font-weight:800;color:var(--ink)}
-		.nav a.link{color:var(--ink);padding:10px 12px;border-radius:10px}
-		.nav a.link:hover{background:#f5f7fb}
-		.nav .right{margin-left:auto;display:flex;gap:10px;align-items:center}
-		.btn{display:inline-flex;align-items:center;gap:8px;border-radius:10px;padding:10px 16px;font-weight:700}
-		.btn-primary{background:var(--btn-primary);color:#fff;box-shadow:var(--shadow)}
-		.btn-primary:hover{background:var(--btn-primary-hover)}
-		.btn-ghost{background:var(--btn-ghost);color:var(--btn-ghost-text);border:1px solid var(--btn-ghost-border)}
-		.btn-ghost:hover{background:#fff4f4}
-
-		/* HERO */
-		.hero{
-			margin-left: calc(50% - 50vw);
-			margin-right: calc(50% - 50vw);
-			width: 100vw;
-			background:var(--brand);
-		}
-		.hero-inner{
-			max-width:1200px;margin:0 auto;padding:58px 18px 64px;display:grid;gap:32px;
-			grid-template-columns:1.4fr 1fr;align-items:center;
-		}
-		@media (max-width:980px){ .hero-inner{grid-template-columns:1fr} }
-		.kicker{color:#12336f;font-weight:800;letter-spacing:.2px;margin-bottom:14px}
-		.h1{font-size:44px;line-height:1.15;margin:0 0 14px;color:#fff}
-		.lead{color:#ffecec;max-width:60ch;margin:0 0 24px}
-		.cta{display:flex;gap:14px;flex-wrap:wrap}
-		.btn-invert{background:#fff;color:var(--brand);border:1px solid #ffd7d7;font-weight:800}
-		.btn-invert:hover{background:#fff7f7}
-		.btn-outline{background:transparent;color:#fff;border:2px solid #fff}
-		.btn-outline:hover{background:rgba(255,255,255,.12)}
-		.illus{
-			background:var(--card);border-radius:18px;box-shadow:var(--shadow);
-			min-height:360px;
-			display:flex;align-items:center;justify-content:center;
-		}
-		.illus::after{
-			content:"Hình minh hoạ";
-			color:#a5adbb;font-weight:700;
+		:root {
+			/* Dark theme colors based on the image */
+			--bg-primary: #1a1a1a;
+			--bg-secondary: #2a2a2a;
+			--bg-card: #333333;
+			--text-primary: #ffffff;
+			--text-secondary: #cccccc;
+			--text-muted: #999999;
+			--accent-green: #4ade80;
+			--accent-blue: #3b82f6;
+			--accent-orange: #f59e0b;
+			--border: #404040;
+			--shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 		}
 
-		/* CONTENT sau hero (logged in / more) */
-		.container{max-width:1200px;margin:0 auto;padding:26px 18px}
-		.card{
-			background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:22px;
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
 		}
-		.row{display:grid;grid-template-columns:2fr 1fr;gap:24px}
-		@media (max-width:980px){ .row{grid-template-columns:1fr} }
 
-		.alert{margin-top:10px;font-weight:700}
-		.alert.success{color:#16a34a}
-		.alert.error{color:#dc2626}
-		.info p{margin:8px 0}
-
-		/* avatar + dropdown */
-		.profile{ position:relative; }
-		.profile summary{ list-style:none; cursor:pointer; display:inline-flex; align-items:center; border:1px solid rgba(0,0,0,.06); background:#fff; padding:4px; border-radius:999px; }
-		.profile summary::-webkit-details-marker{ display:none; }
-		.avatar{ width:36px; height:36px; border-radius:50%; object-fit:cover; display:block; }
-		.menu{
-			position:absolute; right:0; top:48px; min-width:240px;
-			background:#fff; color:#0b1320; border:1px solid #e7eaf0; border-radius:12px;
-			box-shadow:0 10px 30px rgba(0,0,0,.08); padding:12px; z-index:50;
+		body {
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+			background: var(--bg-primary);
+			color: var(--text-primary);
+			line-height: 1.6;
 		}
-		.menu .row{ display:flex; gap:12px; align-items:center; }
-		.menu .name{ font-weight:800; }
-		.menu .email{ color:#5b6474; font-size:13px; }
-		.menu .line{ height:1px; background:#f0f2f6; margin:10px 0; }
-		.menu a{ display:block; padding:8px 10px; border-radius:8px; color:#0b1320; text-decoration:none; }
-		.menu a:hover{ background:#f7f8fb; }
+
+		/* Header */
+		.header {
+			background: var(--bg-secondary);
+			border-bottom: 1px solid var(--border);
+			padding: 1rem 2rem;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+
+		.logo {
+			font-size: 1.5rem;
+			font-weight: 800;
+			color: var(--text-primary);
+		}
+
+		.search-bar {
+			display: flex;
+			align-items: center;
+			background: var(--bg-card);
+			border: 1px solid var(--border);
+			border-radius: 8px;
+			padding: 0.5rem 1rem;
+			width: 300px;
+		}
+
+		.search-bar input {
+			background: transparent;
+			border: none;
+			color: var(--text-primary);
+			outline: none;
+			width: 100%;
+			margin-left: 0.5rem;
+		}
+
+		.search-bar input::placeholder {
+			color: var(--text-muted);
+		}
+
+		.header-right {
+			display: flex;
+			align-items: center;
+			gap: 1rem;
+		}
+
+		.user-info {
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+		}
+
+		.icon {
+			width: 24px;
+			height: 24px;
+			cursor: pointer;
+			opacity: 0.7;
+			transition: opacity 0.2s;
+		}
+
+		.icon:hover {
+			opacity: 1;
+		}
+
+		/* Main Layout */
+		.main-container {
+			display: grid;
+			grid-template-columns: 1fr 1fr 1fr;
+			gap: 2rem;
+			padding: 2rem;
+			max-width: 1400px;
+			margin: 0 auto;
+		}
+
+		/* Cards */
+		.card {
+			background: var(--bg-card);
+			border-radius: 12px;
+			padding: 1.5rem;
+			border: 1px solid var(--border);
+			box-shadow: var(--shadow);
+		}
+
+		.card-header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin-bottom: 1.5rem;
+		}
+
+		.card-title {
+			font-size: 1.1rem;
+			font-weight: 600;
+			color: var(--text-primary);
+		}
+
+		/* Left Column - My Objectives */
+		.objective-item {
+			margin-bottom: 1.5rem;
+			padding: 1rem;
+			background: var(--bg-secondary);
+			border-radius: 8px;
+			border: 1px solid var(--border);
+		}
+
+		.objective-title {
+			font-weight: 600;
+			margin-bottom: 0.5rem;
+			color: var(--text-primary);
+		}
+
+		.progress-bar {
+			width: 100%;
+			height: 8px;
+			background: var(--bg-primary);
+			border-radius: 4px;
+			overflow: hidden;
+			margin: 0.5rem 0;
+		}
+
+		.progress-fill {
+			height: 100%;
+			background: var(--accent-green);
+			transition: width 0.3s ease;
+		}
+
+		.progress-text {
+			font-size: 0.9rem;
+			color: var(--text-secondary);
+			margin-top: 0.25rem;
+		}
+
+		/* Middle Column */
+		.objective-card {
+			background: var(--bg-secondary);
+			border: 1px solid var(--border);
+			border-radius: 8px;
+			padding: 1rem;
+			margin-bottom: 1rem;
+		}
+
+		.objective-card-title {
+			font-weight: 600;
+			margin-bottom: 0.5rem;
+			color: var(--text-primary);
+		}
+
+		.btn {
+			background: var(--accent-blue);
+			color: white;
+			border: none;
+			padding: 0.5rem 1rem;
+			border-radius: 6px;
+			cursor: pointer;
+			font-size: 0.9rem;
+			transition: background 0.2s;
+		}
+
+		.btn:hover {
+			background: #2563eb;
+		}
+
+		.btn-green {
+			background: var(--accent-green);
+		}
+
+		.btn-green:hover {
+			background: #22c55e;
+		}
+
+		/* Team Activity */
+		.activity-item {
+			display: flex;
+			align-items: center;
+			gap: 0.75rem;
+			padding: 0.75rem 0;
+			border-bottom: 1px solid var(--border);
+		}
+
+		.activity-item:last-child {
+			border-bottom: none;
+		}
+
+		.activity-avatar {
+			width: 32px;
+			height: 32px;
+			border-radius: 50%;
+			background: var(--accent-blue);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: white;
+			font-weight: 600;
+			font-size: 0.8rem;
+		}
+
+		.activity-content {
+			flex: 1;
+		}
+
+		.activity-name {
+			font-weight: 600;
+			color: var(--text-primary);
+		}
+
+		.activity-text {
+			font-size: 0.9rem;
+			color: var(--text-secondary);
+		}
+
+		.activity-time {
+			font-size: 0.8rem;
+			color: var(--text-muted);
+		}
+
+		/* Right Column - Chart */
+		.chart-container {
+			height: 200px;
+			background: var(--bg-secondary);
+			border-radius: 8px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin-bottom: 1.5rem;
+			position: relative;
+		}
+
+		.chart-line {
+			position: absolute;
+			bottom: 20px;
+			left: 20px;
+			right: 20px;
+			height: 2px;
+			background: linear-gradient(90deg, var(--accent-green) 0%, var(--accent-green) 75%, transparent 75%);
+		}
+
+		.chart-line::before {
+			content: '';
+			position: absolute;
+			top: -4px;
+			right: 0;
+			width: 8px;
+			height: 8px;
+			background: var(--accent-green);
+			border-radius: 50%;
+		}
+
+		/* Quick Actions */
+		.quick-actions {
+			display: flex;
+			flex-direction: column;
+			gap: 0.75rem;
+		}
+
+		.input-field {
+			background: var(--bg-secondary);
+			border: 1px solid var(--border);
+			border-radius: 6px;
+			padding: 0.75rem;
+			color: var(--text-primary);
+			outline: none;
+		}
+
+		.input-field::placeholder {
+			color: var(--text-muted);
+		}
+
+		/* Responsive */
+		@media (max-width: 1200px) {
+			.main-container {
+				grid-template-columns: 1fr 1fr;
+			}
+		}
+
+		@media (max-width: 768px) {
+			.main-container {
+				grid-template-columns: 1fr;
+			}
+
+			.header {
+				flex-direction: column;
+				gap: 1rem;
+			}
+
+			.search-bar {
+				width: 100%;
+			}
+		}
+
+		/* Login/Register buttons for non-authenticated users */
+		.auth-buttons {
+			display: flex;
+			gap: 1rem;
+		}
+
+		.btn-login {
+			background: var(--accent-green);
+			color: white;
+			padding: 0.75rem 1.5rem;
+			border-radius: 8px;
+			text-decoration: none;
+			font-weight: 600;
+			transition: background 0.2s;
+		}
+
+		.btn-login:hover {
+			background: #22c55e;
+		}
+
+		.btn-register {
+			background: transparent;
+			color: var(--text-primary);
+			border: 1px solid var(--border);
+			padding: 0.75rem 1.5rem;
+			border-radius: 8px;
+			text-decoration: none;
+			font-weight: 600;
+			transition: background 0.2s;
+		}
+
+		.btn-register:hover {
+			background: var(--bg-secondary);
+		}
+
+		/* Profile dropdown */
+		.profile {
+			position: relative;
+		}
+
+		.profile summary {
+			list-style: none;
+			cursor: pointer;
+			display: inline-flex;
+			align-items: center;
+			gap: 0.5rem;
+		}
+
+		.profile summary::-webkit-details-marker {
+			display: none;
+		}
+
+		.avatar {
+			width: 32px;
+			height: 32px;
+			border-radius: 50%;
+			object-fit: cover;
+		}
+
+		.menu {
+			position: absolute;
+			right: 0;
+			top: 48px;
+			min-width: 200px;
+			background: var(--bg-card);
+			border: 1px solid var(--border);
+			border-radius: 8px;
+			box-shadow: var(--shadow);
+			padding: 1rem;
+			z-index: 50;
+		}
+
+		.menu .user-info {
+			margin-bottom: 1rem;
+		}
+
+		.menu .name {
+			font-weight: 600;
+			color: var(--text-primary);
+		}
+
+		.menu .email {
+			font-size: 0.9rem;
+			color: var(--text-muted);
+		}
+
+		.menu .line {
+			height: 1px;
+			background: var(--border);
+			margin: 0.75rem 0;
+		}
+
+		.menu a {
+			display: block;
+			padding: 0.5rem 0;
+			color: var(--text-primary);
+			text-decoration: none;
+			transition: color 0.2s;
+		}
+
+		.menu a:hover {
+			color: var(--accent-blue);
+		}
 	</style>
 </head>
 <body>
 
-	<!-- NAV -->
-	<div class="nav-wrap">
-		<div class="nav">
-			<div class="brand">OKR Platform</div>
-			<a class="link" href="#">Về chúng tôi</a>
-			<a class="link" href="#">Sản phẩm</a>
-			<a class="link" href="#">Giải pháp</a>
-			<a class="link" href="#">Kiến thức</a>
-			<a class="link" href="#">Khách hàng</a>
-			<div class="right">
-				<a class="btn btn-ghost" href="#">Tư vấn 1:1</a>
+	<!-- Header -->
+	<div class="header">
+		<div class="logo">OKR | FOCUS</div>
 
-				@auth
-					@php
-						$avatar = auth()->user()->avatar_url ?: 'https://www.gravatar.com/avatar/'.md5(strtolower(trim(auth()->user()->email))).'?s=200&d=identicon';
-					@endphp
+		<div class="search-bar">
+			<svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+				<path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
+			</svg>
+			<input type="text" placeholder="Search">
+		</div>
 
-					<!-- Avatar + Dropdown -->
-					<details class="profile">
-						<summary>
+		<div class="header-right">
+			@auth
+				@php
+					$avatar = auth()->user()->avatar_url ?: 'https://www.gravatar.com/avatar/'.md5(strtolower(trim(auth()->user()->email))).'?s=200&d=identicon';
+				@endphp
+
+				<svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+					<path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"></path>
+				</svg>
+
+				<svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+					<path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path>
+				</svg>
+
+				<details class="profile">
+					<summary>
+						<img class="avatar" src="{{ $avatar }}" alt="avatar">
+						<span>{{ auth()->user()->full_name ?? 'User' }}</span>
+					</summary>
+					<div class="menu">
+						<div class="user-info">
 							<img class="avatar" src="{{ $avatar }}" alt="avatar">
-						</summary>
-						<div class="menu">
-							<div class="row" style="margin-bottom:10px">
-								<img class="avatar" src="{{ $avatar }}" alt="avatar">
-								<div>
-									<div class="name">{{ auth()->user()->full_name ?? 'Chưa cập nhật' }}</div>
-									<div class="email">{{ auth()->user()->email }}</div>
-								</div>
+							<div>
+								<div class="name">{{ auth()->user()->full_name ?? 'Chưa cập nhật' }}</div>
+								<div class="email">{{ auth()->user()->email }}</div>
 							</div>
-							<div class="line"></div>
-							<a href="{{ route('dashboard') }}">Hồ sơ / Trang của tôi</a>
-							<a href="{{ route('auth.logout') }}">Đăng xuất</a>
 						</div>
-					</details>
-				@else
-					<a class="btn btn-primary" href="{{ route('auth.redirect') }}">Đăng nhập</a>
-				@endauth
-			</div>
+						<div class="line"></div>
+						<a href="{{ route('dashboard') }}">Hồ sơ / Trang của tôi</a>
+						<a href="{{ route('auth.logout') }}">Đăng xuất</a>
+					</div>
+				</details>
+			@else
+				<div class="auth-buttons">
+					<a href="{{ route('auth.redirect') }}" class="btn-login">Đăng nhập</a>
+					<a href="{{ route('auth.redirect') }}" class="btn-register">Đăng ký</a>
+				</div>
+			@endauth
 		</div>
 	</div>
 
 	@auth
-		<!-- ĐÃ ĐĂNG NHẬP: hiển thị thông tin -->
-		<div class="container">
-			<div class="card info">
-				<div class="kicker">Đăng nhập thành công</div>
-				<h2 style="margin:0 0 6px">Chào mừng đến Dashboard</h2>
-				@if (session('success')) <div class="alert success">{{ session('success') }}</div> @endif
-				@if (session('error'))   <div class="alert error">{{ session('error') }}</div>   @endif
+		<!-- Main Dashboard Content -->
+		<div class="main-container">
+			<!-- Left Column - My Objectives -->
+			<div class="card">
+				<div class="card-header">
+					<h2 class="card-title">My Objectives</h2>
+				</div>
 
-				<p><strong>Email:</strong> {{ auth()->user()->email }}</p>
-				<p><strong>Họ tên:</strong> {{ auth()->user()->full_name ?? 'Chưa cập nhật' }}</p>
-				<p><strong>Số điện thoại:</strong> {{ auth()->user()->phone ?? 'Chưa cập nhật' }}</p>
-				<p><strong>Chức vụ:</strong> {{ auth()->user()->job_title ?? 'Chưa cập nhật' }}</p>
-				@if (auth()->user()->avatar_url)
-					<p><img src="{{ auth()->user()->avatar_url }}" alt="Avatar" style="width:72px;height:72px;border-radius:50%;border:3px solid #ffe0e0"></p>
-				@endif
-			</div>
-		</div>
-	@else
-		<!-- CHƯA ĐĂNG NHẬP: hero theo ảnh -->
-		<section class="hero">
-			<div class="hero-inner">
-				<div>
-					<div class="kicker">CoDX > Không gian cộng tác số</div>
-					<h1 class="h1">Phần mềm OKR quản lý mục tiêu – DEMO miễn phí cho doanh nghiệp</h1>
-					<p class="lead">Thiết lập mục tiêu, theo dõi kết quả then chốt, phân bổ minh bạch và đo lường realtime. Đăng nhập Google qua AWS Cognito – an toàn, nhanh và chuẩn OAuth2.</p>
-					<div class="cta">
-						<a class="btn btn-invert" href="#">Yêu cầu DEMO</a>
-						<a class="btn btn-outline" href="{{ route('auth.redirect') }}">Thuê ngay</a>
+				<div class="objective-item">
+					<div class="objective-title">Increase Q4 Revenue</div>
+					<div class="progress-bar">
+						<div class="progress-fill" style="width: 75%"></div>
+					</div>
+					<div class="progress-text">75% Complete</div>
+					<div style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">
+						Aclone SSM er ades (12112)<br>
+						(LONG)219) - 3%
 					</div>
 				</div>
-				<div class="illus"></div>
-			</div>
-		</section>
 
-		<!-- Khối “More” -->
-		<div class="container">
-			<div class="row">
-				<div class="card">
-					<h3 style="margin-top:0">Lợi ích nổi bật</h3>
-					<ul style="margin:8px 0 0 18px;color:var(--muted)">
-						<li>Liên kết mục tiêu công ty – phòng ban – cá nhân.</li>
-						<li>Chu kỳ, check-in, bình luận, thông báo real-time.</li>
-						<li>Báo cáo nâng cao và audit logs minh bạch.</li>
-					</ul>
+				<div class="objective-item">
+					<div class="objective-title">Launch New Product Feature</div>
+					<div class="progress-bar">
+						<div class="progress-fill" style="width: 55%"></div>
+					</div>
+					<div class="progress-text">55% Complete</div>
+					<div style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">
+						Releases SEM ar sales Etisan 38M/200)<br>
+						(228) - 3%
+					</div>
 				</div>
-				<div class="card">
-					<h3 style="margin-top:0)">More</h3>
-					<p style="color:var(--muted)">Phân quyền, cộng tác, khuyến nghị OKR bằng AI…</p>
+
+				<div class="objective-item">
+					<div class="objective-title">Improve Customer Satisfaction</div>
+					<div class="progress-bar">
+						<div class="progress-fill" style="width: 99%"></div>
+					</div>
+					<div class="progress-text">99% Complete</div>
+					<div style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">
+						Refecse sopioot ladees by 20%)<br>
+						(Abw288) - 65% ✓
+					</div>
 				</div>
 			</div>
 
-			@if (session('success')) <div class="alert success">{{ session('success') }}</div> @endif
-			@if (session('error'))   <div class="alert error">{{ session('error') }}</div>   @endif
+			<!-- Middle Column -->
+			<div>
+				<!-- Your Objectives -->
+				<div class="card" style="margin-bottom: 2rem;">
+					<div class="card-header">
+						<h2 class="card-title">Your Objectives</h2>
+						<svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+							<path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"></path>
+						</svg>
+					</div>
+
+					<div class="objective-card">
+						<div class="objective-card-title">Upcoming Key Milestones</div>
+						<button class="btn">View All</button>
+					</div>
+
+					<div class="objective-card">
+						<div class="objective-card-title">Upcoming Milestones</div>
+						<button class="btn">Review Code</button>
+					</div>
+
+					<div class="objective-card">
+						<div class="objective-card-title">Design System Updates</div>
+						<button class="btn">More Info</button>
+					</div>
+				</div>
+
+				<!-- Team Activity Feed -->
+				<div class="card">
+					<div class="card-header">
+						<h2 class="card-title">Team Activity Feed</h2>
+						<svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+							<path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+						</svg>
+					</div>
+
+					<div class="activity-item">
+						<div class="activity-avatar">AC</div>
+						<div class="activity-content">
+							<div class="activity-name">Alex Chen</div>
+							<div class="activity-text">Completed Q4 Revenue objective</div>
+							<div class="activity-time">2028 pen 3</div>
+						</div>
+					</div>
+
+					<div class="activity-item">
+						<div class="activity-avatar">SM</div>
+						<div class="activity-content">
+							<div class="activity-name">Sarah Miller</div>
+							<div class="activity-text">Added new milestone</div>
+							<div class="activity-time">$ new 8</div>
+						</div>
+					</div>
+
+					<div class="activity-item">
+						<div class="activity-avatar">JD</div>
+						<div class="activity-content">
+							<div class="activity-name">John Doe</div>
+							<div class="activity-text">Updated progress report</div>
+							<div class="activity-time">220 000 8</div>
+						</div>
+					</div>
+
+					<div class="activity-item">
+						<div class="activity-avatar">EM</div>
+						<div class="activity-content">
+							<div class="activity-name">Emma Wilson</div>
+							<div class="activity-text">Reviewed team objectives</div>
+							<div class="activity-time">3.00m 8</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Right Column -->
+			<div>
+				<!-- Performance Chart -->
+				<div class="card" style="margin-bottom: 2rem;">
+					<div class="card-header">
+						<h2 class="card-title">Performance Chart</h2>
+					</div>
+					<div class="chart-container">
+						<div class="chart-line"></div>
+						<div style="position: absolute; bottom: 10px; left: 10px; font-size: 0.8rem; color: var(--text-muted);">
+							11 13 15 17 19
+						</div>
+						<div style="position: absolute; left: 10px; top: 10px; font-size: 0.8rem; color: var(--text-muted);">
+							22<br>23<br>24<br>25
+						</div>
+					</div>
+				</div>
+
+				<!-- Quick Actions -->
+				<div class="card">
+					<div class="card-header">
+						<h2 class="card-title">Quick Actions</h2>
+					</div>
+
+					<div class="quick-actions">
+						<input type="text" class="input-field" placeholder="Add new objective">
+						<button class="btn btn-green">Add New OKR</button>
+						<button class="btn">View Chat</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		@if (session('success'))
+			<div style="position: fixed; top: 20px; right: 20px; background: var(--accent-green); color: white; padding: 1rem; border-radius: 8px; z-index: 1000;">
+				{{ session('success') }}
+			</div>
+		@endif
+
+		@if (session('error'))
+			<div style="position: fixed; top: 20px; right: 20px; background: #ef4444; color: white; padding: 1rem; border-radius: 8px; z-index: 1000;">
+				{{ session('error') }}
+			</div>
+		@endif
+
+	@else
+		<!-- Landing page for non-authenticated users -->
+		<div style="text-align: center; padding: 4rem 2rem;">
+			<h1 style="font-size: 3rem; margin-bottom: 1rem; color: var(--text-primary);">OKR | FOCUS</h1>
+			<p style="font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 3rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+				Quản lý mục tiêu và kết quả then chốt một cách hiệu quả. Đăng nhập để bắt đầu sử dụng dashboard.
+			</p>
+			<div class="auth-buttons" style="justify-content: center;">
+				<a href="{{ route('auth.redirect') }}" class="btn-login">Đăng nhập</a>
+				<a href="{{ route('auth.redirect') }}" class="btn-register">Đăng ký</a>
+			</div>
 		</div>
 	@endauth
 
