@@ -190,4 +190,22 @@ class AuthController extends Controller
         Auth::logout();
         return redirect('/dashboard')->with('success', 'Đăng xuất thành công!');
     }
+
+    // Thêm method này vào AuthController
+    public function redirectToGoogleDirect()
+    {
+        $url = 'https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?' . http_build_query([
+            'client_id' => '291124312824-b9ud5185shpcist3fac89e18qoitkp0l.apps.googleusercontent.com',
+            'redirect_uri' => 'https://ap-southeast-2rqig6bh9c.auth.ap-southeast-2.amazoncognito.com/oauth2/idpresponse',
+            'scope' => 'profile email openid',
+            'response_type' => 'code',
+            'state' => 'H4sIAAAAAAAAAGWQW3ObMBCF_4uejS1sZC5vNG5i49hTjGJymUxGEgJkCwRCSWw6_e9Vpi_t9G3Pnm_O7pyfgIAIkM4Z1LupORmMM3_T6aZa0jpkYAKote-UqiS3glmxIDogTLG2Jx9e2Ksy7LkpTvPiZIHCArUxXTSbScWIrNVgogBCOCM2fmY3khJ2tiS3JFPFV2r594kKRC-AN0RIK1THW1HYoatVy8HrBJwtiy_DIxS73h_xY7wt1amP3aObBkEo6A6xe6y1yRpXmASzZJ331y5PxHHvbrYmHq-xwisfjU9Jp31xpO53ltwu5j7KBT4_OBDuN2_e8X07xEY7ux9Jtv72cMAy9-8P2YUHFH7iFK1vtTy0ebHCyN9zN73rno3h2cdYNTcZPq_c63N6qTsS29flf_3qXvypd_pVyvRfc0oaMqqWqaoVRk2ZamxGAyLXR0GAPLiAtg0QlUQOfAK0DS9C5jPCoENdVjqeh-xECuqUcxJ6JUXLZQjBr98Bno4M6QEAAA.H4sIAAAAAAAAAAEgAN__4MvsSU9bU6cYXlhnQJACcnG2_Y14tMRTtM5BE86S-8Cjj8l-IAAAAA.3',
+            'access_type' => 'offline',
+            'service' => 'lso',
+            'o2v' => '2',
+            'flowName' => 'GeneralOAuthFlow'
+        ]);
+        
+        return redirect($url);
+    }
 }
