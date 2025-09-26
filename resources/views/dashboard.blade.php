@@ -310,12 +310,12 @@
 			.main-container {
 				grid-template-columns: 1fr;
 			}
-
+			
 			.header {
 				flex-direction: column;
 				gap: 1rem;
 			}
-
+			
 			.search-bar {
 				width: 100%;
 			}
@@ -431,7 +431,7 @@
 	<!-- Header -->
 	<div class="header">
 		<div class="logo">OKR | FOCUS</div>
-
+		
 		<div class="search-bar">
 			<svg class="icon" fill="currentColor" viewBox="0 0 20 20">
 				<path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
@@ -474,7 +474,7 @@
 			@else
 				<div class="auth-buttons">
 					<a href="{{ route('auth.login') }}" class="btn-login">Đăng nhập</a>
-					<a href="{{ route('auth.signup') }}" class="btn-register">Đăng ký</a>
+					<a href="{{ route('auth.register') }}" class="btn-register">Đăng ký</a>
 				</div>
 			@endauth
 		</div>
@@ -488,7 +488,7 @@
 				<div class="card-header">
 					<h2 class="card-title">My Objectives</h2>
 				</div>
-
+				
 				<div class="objective-item">
 					<div class="objective-title">Increase Q4 Revenue</div>
 					<div class="progress-bar">
@@ -537,4 +537,127 @@
 						</svg>
 					</div>
 
-					<div class="obj
+					<div class="objective-card">
+						<div class="objective-card-title">Upcoming Key Milestones</div>
+						<button class="btn">View All</button>
+					</div>
+
+					<div class="objective-card">
+						<div class="objective-card-title">Upcoming Milestones</div>
+						<button class="btn">Review Code</button>
+					</div>
+
+					<div class="objective-card">
+						<div class="objective-card-title">Design System Updates</div>
+						<button class="btn">More Info</button>
+					</div>
+				</div>
+
+				<!-- Team Activity Feed -->
+				<div class="card">
+					<div class="card-header">
+						<h2 class="card-title">Team Activity Feed</h2>
+						<svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+							<path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+						</svg>
+					</div>
+
+					<div class="activity-item">
+						<div class="activity-avatar">AC</div>
+						<div class="activity-content">
+							<div class="activity-name">Alex Chen</div>
+							<div class="activity-text">Completed Q4 Revenue objective</div>
+							<div class="activity-time">2028 pen 3</div>
+						</div>
+					</div>
+
+					<div class="activity-item">
+						<div class="activity-avatar">SM</div>
+						<div class="activity-content">
+							<div class="activity-name">Sarah Miller</div>
+							<div class="activity-text">Added new milestone</div>
+							<div class="activity-time">$ new 8</div>
+						</div>
+					</div>
+
+					<div class="activity-item">
+						<div class="activity-avatar">JD</div>
+						<div class="activity-content">
+							<div class="activity-name">John Doe</div>
+							<div class="activity-text">Updated progress report</div>
+							<div class="activity-time">220 000 8</div>
+						</div>
+					</div>
+
+					<div class="activity-item">
+						<div class="activity-avatar">EM</div>
+						<div class="activity-content">
+							<div class="activity-name">Emma Wilson</div>
+							<div class="activity-text">Reviewed team objectives</div>
+							<div class="activity-time">3.00m 8</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Right Column -->
+			<div>
+				<!-- Performance Chart -->
+				<div class="card" style="margin-bottom: 2rem;">
+					<div class="card-header">
+						<h2 class="card-title">Performance Chart</h2>
+					</div>
+					<div class="chart-container">
+						<div class="chart-line"></div>
+						<div style="position: absolute; bottom: 10px; left: 10px; font-size: 0.8rem; color: var(--text-muted);">
+							11 13 15 17 19
+						</div>
+						<div style="position: absolute; left: 10px; top: 10px; font-size: 0.8rem; color: var(--text-muted);">
+							22<br>23<br>24<br>25
+						</div>
+					</div>
+				</div>
+
+				<!-- Quick Actions -->
+				<div class="card">
+					<div class="card-header">
+						<h2 class="card-title">Quick Actions</h2>
+					</div>
+					
+					<div class="quick-actions">
+						<input type="text" class="input-field" placeholder="Add new objective">
+						<button class="btn btn-green">Add New OKR</button>
+						<button class="btn">View Chat</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		@if (session('success'))
+			<div style="position: fixed; top: 20px; right: 20px; background: var(--accent-green); color: white; padding: 1rem; border-radius: 8px; z-index: 1000;">
+				{{ session('success') }}
+			</div>
+		@endif
+
+		@if (session('error'))
+			<div style="position: fixed; top: 20px; right: 20px; background: #ef4444; color: white; padding: 1rem; border-radius: 8px; z-index: 1000;">
+				{{ session('error') }}
+			</div>
+		@endif
+
+	@else
+		<!-- Landing page for non-authenticated users -->
+		<div style="text-align: center; padding: 4rem 2rem;">
+			<h1 style="font-size: 3rem; margin-bottom: 1rem; color: var(--text-primary);">OKR | FOCUS</h1>
+			<p style="font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 3rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+				Quản lý mục tiêu và kết quả then chốt một cách hiệu quả. Đăng nhập để bắt đầu sử dụng dashboard.
+			</p>
+			<div class="auth-buttons" style="justify-content: center;">
+				<a href="{{ route('auth.login') }}" class="btn-login">Đăng nhập</a>
+				<a href="{{ route('auth.register') }}" class="btn-register">Đăng ký</a>
+			</div>
+		</div>
+	@endauth
+
+</body>
+</html>

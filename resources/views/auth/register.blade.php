@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Đăng nhập - OKR Platform</title>
+	<title>Đăng ký - OKR Platform</title>
 	<style>
 		:root {
 			--primary-blue: #3b82f6;
@@ -37,7 +37,7 @@
 			height: 100vh;
 		}
 
-		/* Left Panel - Login Form */
+		/* Left Panel - Register Form */
 		.left-panel {
 			width: 40%;
 			background: var(--white);
@@ -78,68 +78,6 @@
 			font-size: 1.1rem;
 			color: var(--text-secondary);
 			margin-bottom: 2.5rem;
-		}
-
-		.form-group {
-			margin-bottom: 1.5rem;
-		}
-
-		.form-label {
-			display: block;
-			font-weight: 600;
-			color: var(--text-primary);
-			margin-bottom: 0.5rem;
-		}
-
-		.form-input {
-			width: 100%;
-			padding: 0.875rem 1rem;
-			border: 2px solid var(--border-light);
-			border-radius: 8px;
-			font-size: 1rem;
-			transition: border-color 0.2s;
-		}
-
-		.form-input:focus {
-			outline: none;
-			border-color: var(--primary-blue);
-		}
-
-		.form-input::placeholder {
-			color: var(--text-muted);
-		}
-
-		.forgot-password {
-			text-align: right;
-			margin-top: 0.5rem;
-		}
-
-		.forgot-password a {
-			color: var(--primary-blue);
-			text-decoration: none;
-			font-size: 0.9rem;
-		}
-
-		.forgot-password a:hover {
-			text-decoration: underline;
-		}
-
-		.checkbox-group {
-			display: flex;
-			align-items: center;
-			margin-bottom: 2rem;
-		}
-
-		.checkbox {
-			width: 18px;
-			height: 18px;
-			margin-right: 0.75rem;
-			accent-color: var(--primary-blue);
-		}
-
-		.checkbox-label {
-			color: var(--text-secondary);
-			font-size: 0.95rem;
 		}
 
 		.btn-primary {
@@ -228,6 +166,22 @@
 			display: flex;
 			align-items: center;
 			justify-content: center;
+		}
+
+		.login-link {
+			text-align: center;
+			margin-top: 2rem;
+			color: var(--text-secondary);
+		}
+
+		.login-link a {
+			color: var(--primary-blue);
+			text-decoration: none;
+			font-weight: 600;
+		}
+
+		.login-link a:hover {
+			text-decoration: underline;
 		}
 
 		/* Right Panel - Background */
@@ -348,33 +302,17 @@
 			color: #991b1b;
 			border: 1px solid #fca5a5;
 		}
-
-		.login-link {
-    text-align: center;
-    margin-top: 1rem;
-    color: var(--text-secondary);
-}
-
-.login-link a {
-    color: var(--primary-blue);
-    text-decoration: none;
-    font-weight: 600;
-}
-
-.login-link a:hover {
-    text-decoration: underline;
-}
 	</style>
 </head>
 <body>
 
 	<div class="container">
-		<!-- Left Panel - Login Form -->
+		<!-- Left Panel - Register Form -->
 		<div class="left-panel">
 			<div class="logo"></div>
 
-			<h1 class="form-title">Đăng nhập</h1>
-			<p class="form-subtitle">Chào mừng bạn. Đăng nhập để bắt đầu làm việc.</p>
+			<h1 class="form-title">Đăng ký</h1>
+			<p class="form-subtitle">Tạo tài khoản mới để bắt đầu sử dụng OKR Platform.</p>
 
 			@if (session('success'))
 				<div class="alert alert-success">{{ session('success') }}</div>
@@ -384,35 +322,12 @@
 				<div class="alert alert-error">{{ session('error') }}</div>
 			@endif
 
-			<form method="POST" action="{{ route('auth.redirect') }}">
-				@csrf
-				<div class="form-group">
-					<label class="form-label" for="email">Email</label>
-					<input type="email" id="email" name="email" class="form-input" placeholder="Email của bạn" required>
-				</div>
-
-				<div class="form-group">
-					<label class="form-label" for="password">Mật khẩu</label>
-					<input type="password" id="password" name="password" class="form-input" placeholder="Mật khẩu của bạn" required>
-					<div class="forgot-password">
-						<a href="{{ route('auth.forgot') }}">Quên mật khẩu?</a>
-					</div>
-				</div>
-
-				<div class="checkbox-group">
-					<input type="checkbox" id="remember" name="remember" class="checkbox" checked>
-					<label for="remember" class="checkbox-label">Giữ tôi luôn đăng nhập</label>
-				</div>
-
-				<button type="submit" class="btn-primary">Đăng nhập</button>
-			</form>
-
-			<div class="login-link">
-				Chưa có tài khoản? <a href="{{ route('auth.register') }}">Đăng ký ngay</a>
-			</div>
+			<button onclick="window.location.href='{{ route('auth.signup') }}'" class="btn-primary">
+				Tạo tài khoản mới
+			</button>
 
 			<div class="divider">
-				<span class="divider-text">Hoặc, đăng nhập thông qua Google</span>
+				<span class="divider-text">Hoặc, đăng ký thông qua Google</span>
 			</div>
 
 			<a href="{{ route('auth.google') }}" class="google-btn">
@@ -424,8 +339,12 @@
 						<path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
 					</svg>
 				</div>
-				Đăng nhập bằng Google
+				Đăng ký bằng Google
 			</a>
+
+			<div class="login-link">
+				Đã có tài khoản? <a href="{{ route('auth.login') }}">Đăng nhập ngay</a>
+			</div>
 		</div>
 
 		<!-- Right Panel - Background -->
@@ -433,9 +352,9 @@
 			<div class="main-logo"></div>
 
 			<div class="floating-icons">
-				<div class="floating-icon">💼</div>
-				<div class="floating-icon">📊</div>
-				<div class="floating-icon">🎯</div>
+				<div class="floating-icon">��</div>
+				<div class="floating-icon">��</div>
+				<div class="floating-icon">��</div>
 				<div class="floating-icon">📍</div>
 				<div class="floating-icon">W</div>
 				<div class="floating-icon">⚡</div>

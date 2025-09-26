@@ -11,6 +11,11 @@ Route::get('/login', function () {
     return view('auth.login');
 })->name('auth.login');
 
+// Trang đăng ký
+Route::get('/register', function () {
+    return view('auth.register');
+})->name('auth.register');
+
 // Routes cho đăng nhập
 Route::get('/auth/redirect', [AuthController::class, 'redirectToCognito'])->name('auth.redirect');
 Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
