@@ -140,6 +140,58 @@ class AuthController extends Controller
         return redirect('/dashboard')->with('success', 'Đăng nhập thành công từ ' . $provider);
     }
 
+    // Xử lý callback từ Google OAuth
+    public function handleGoogleCallback(Request $request)
+    {
+        $code = $request->query('code');
+        if (!$code) {
+            return redirect('/login')->with('error', 'Đăng nhập Google thất bại');
+        }
+
+        // Gửi yêu cầu lấy token từ Google
+        $tokenUrl = 'https://oauth2.googleapis.com/token';
+        $requestData = [
+            'grant_type' => 'authorization_code',
+            'client_id' => env('GOOGLE_CLIENT_ID', '291124312824-b9ud5185shpcist3fac89e18qoitkp0l.apps.googleusercontent.com'),
+            'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+            'code' => $code,
+            'redirect_uri' => 'http://localhost:8000/auth/google-callback',
+        ];
+
+        $response = Http::asForm()->post($tokenUrl, $requestData);
+
+        if ($response->failed()) {
+            \Log::error("Google token request failed: " . $response->body());
+            return redirect('/login')->with('error', 'Lỗi lấy token từ Google');
+        }
+
+        $tokens = $response->json();
+        $accessToken = $tokens['access_token'];
+
+        // Lấy thông tin user từ Google
+        $userResponse = Http::withToken($accessToken)->get('https://www.googleapis.com/oauth2/v2/userinfo');
+        
+        if ($userResponse->failed()) {
+            return redirect('/login')->with('error', 'Không thể lấy thông tin người dùng');
+        }
+
+        $userData = $userResponse->json();
+
+        // Lưu vào database
+        $user = User::updateOrCreate(
+            ['email' => $userData['email']],
+            [
+                'email' => $userData['email'],
+                'full_name' => $userData['name'],
+                'avatar_url' => $userData['picture'],
+                'google_id' => $userData['id'],
+            ]
+        );
+
+        Auth::login($user);
+        return redirect('/dashboard')->with('success', 'Đăng nhập thành công với Google!');
+    }
+
     // Phát hiện provider từ token data
     private function detectProvider($userData)
     {
@@ -189,23 +241,5 @@ class AuthController extends Controller
     {
         Auth::logout();
         return redirect('/dashboard')->with('success', 'Đăng xuất thành công!');
-    }
-
-    // Thêm method này vào AuthController
-    public function redirectToGoogleDirect()
-    {
-        $url = 'https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?' . http_build_query([
-            'client_id' => '291124312824-b9ud5185shpcist3fac89e18qoitkp0l.apps.googleusercontent.com',
-            'redirect_uri' => 'https://ap-southeast-2rqig6bh9c.auth.ap-southeast-2.amazoncognito.com/oauth2/idpresponse',
-            'scope' => 'profile email openid',
-            'response_type' => 'code',
-            'state' => 'H4sIAAAAAAAAAGWQW3ObMBCF_4uejS1sZC5vNG5i49hTjGJymUxGEgJkCwRCSWw6_e9Vpi_t9G3Pnm_O7pyfgIAIkM4Z1LupORmMM3_T6aZa0jpkYAKote-UqiS3glmxIDogTLG2Jx9e2Ksy7LkpTvPiZIHCArUxXTSbScWIrNVgogBCOCM2fmY3khJ2tiS3JFPFV2r594kKRC-AN0RIK1THW1HYoatVy8HrBJwtiy_DIxS73h_xY7wt1amP3aObBkEo6A6xe6y1yRpXmASzZJ331y5PxHHvbrYmHq-xwisfjU9Jp31xpO53ltwu5j7KBT4_OBDuN2_e8X07xEY7ux9Jtv72cMAy9-8P2YUHFH7iFK1vtTy0ebHCyN9zN73rno3h2cdYNTcZPq_c63N6qTsS29flf_3qXvypd_pVyvRfc0oaMqqWqaoVRk2ZamxGAyLXR0GAPLiAtg0QlUQOfAK0DS9C5jPCoENdVjqeh-xECuqUcxJ6JUXLZQjBr98Bno4M6QEAAA.H4sIAAAAAAAAAAEgAN__4MvsSU9bU6cYXlhnQJACcnG2_Y14tMRTtM5BE86S-8Cjj8l-IAAAAA.3',
-            'access_type' => 'offline',
-            'service' => 'lso',
-            'o2v' => '2',
-            'flowName' => 'GeneralOAuthFlow'
-        ]);
-        
-        return redirect($url);
     }
 }

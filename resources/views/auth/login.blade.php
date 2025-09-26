@@ -37,7 +37,6 @@
 			height: 100vh;
 		}
 
-		/* Left Panel - Login Form */
 		.left-panel {
 			width: 40%;
 			background: var(--white);
@@ -80,68 +79,6 @@
 			margin-bottom: 2.5rem;
 		}
 
-		.form-group {
-			margin-bottom: 1.5rem;
-		}
-
-		.form-label {
-			display: block;
-			font-weight: 600;
-			color: var(--text-primary);
-			margin-bottom: 0.5rem;
-		}
-
-		.form-input {
-			width: 100%;
-			padding: 0.875rem 1rem;
-			border: 2px solid var(--border-light);
-			border-radius: 8px;
-			font-size: 1rem;
-			transition: border-color 0.2s;
-		}
-
-		.form-input:focus {
-			outline: none;
-			border-color: var(--primary-blue);
-		}
-
-		.form-input::placeholder {
-			color: var(--text-muted);
-		}
-
-		.forgot-password {
-			text-align: right;
-			margin-top: 0.5rem;
-		}
-
-		.forgot-password a {
-			color: var(--primary-blue);
-			text-decoration: none;
-			font-size: 0.9rem;
-		}
-
-		.forgot-password a:hover {
-			text-decoration: underline;
-		}
-
-		.checkbox-group {
-			display: flex;
-			align-items: center;
-			margin-bottom: 2rem;
-		}
-
-		.checkbox {
-			width: 18px;
-			height: 18px;
-			margin-right: 0.75rem;
-			accent-color: var(--primary-blue);
-		}
-
-		.checkbox-label {
-			color: var(--text-secondary);
-			font-size: 0.95rem;
-		}
-
 		.btn-primary {
 			width: 100%;
 			background: var(--primary-blue);
@@ -154,6 +91,9 @@
 			cursor: pointer;
 			transition: background-color 0.2s;
 			margin-bottom: 1rem;
+			text-decoration: none;
+			display: block;
+			text-align: center;
 		}
 
 		.btn-primary:hover {
@@ -172,6 +112,9 @@
 			cursor: pointer;
 			transition: all 0.2s;
 			margin-bottom: 1.5rem;
+			text-decoration: none;
+			display: block;
+			text-align: center;
 		}
 
 		.btn-secondary:hover {
@@ -222,33 +165,27 @@
 			border-color: var(--text-muted);
 		}
 
-		.google-logo {
-			width: 20px;
-			height: 20px;
-			display: flex;
-			align-items: center;
-			justify-content: center;
+		.register-link {
+			text-align: center;
+			margin-top: 2rem;
+			color: var(--text-secondary);
 		}
 
-		/* Right Panel - Background */
+		.register-link a {
+			color: var(--primary-blue);
+			text-decoration: none;
+			font-weight: 600;
+		}
+
+		.register-link a:hover {
+			text-decoration: underline;
+		}
+
 		.right-panel {
 			width: 60%;
 			background: linear-gradient(135deg, var(--dark-blue) 0%, var(--dark-blue-light) 100%);
 			position: relative;
 			overflow: hidden;
-		}
-
-		.right-panel::before {
-			content: '';
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			background-image:
-				radial-gradient(circle at 20% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
-				radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 50%),
-				radial-gradient(circle at 40% 60%, rgba(255,255,255,0.05) 0%, transparent 50%);
 		}
 
 		.main-logo {
@@ -313,24 +250,20 @@
 			border-radius: 50% 50% 0 0 / 100% 100% 0 0;
 		}
 
-		/* Responsive */
 		@media (max-width: 768px) {
 			.container {
 				flex-direction: column;
 			}
-
 			.left-panel {
 				width: 100%;
 				height: 60%;
 			}
-
 			.right-panel {
 				width: 100%;
 				height: 40%;
 			}
 		}
 
-		/* Alert messages */
 		.alert {
 			padding: 1rem;
 			border-radius: 8px;
@@ -351,14 +284,12 @@
 	</style>
 </head>
 <body>
-
 	<div class="container">
-		<!-- Left Panel - Login Form -->
 		<div class="left-panel">
 			<div class="logo"></div>
 
 			<h1 class="form-title">Đăng nhập</h1>
-			<p class="form-subtitle">Chào mừng. Đăng nhập để bắt đầu làm việc.</p>
+			<p class="form-subtitle">Chào mừng bạn. Đăng nhập để bắt đầu làm việc.</p>
 
 			@if (session('success'))
 				<div class="alert alert-success">{{ session('success') }}</div>
@@ -368,66 +299,45 @@
 				<div class="alert alert-error">{{ session('error') }}</div>
 			@endif
 
-			<form method="POST" action="{{ route('auth.redirect') }}">
-				@csrf
-				<div class="form-group">
-					<label class="form-label" for="email">Email</label>
-					<input type="email" id="email" name="email" class="form-input" placeholder="Email của bạn" required>
-				</div>
+			<a href="{{ route('auth.redirect') }}" class="btn-primary">
+				Đăng nhập
+			</a>
 
-				<div class="form-group">
-					<label class="form-label" for="password">Mật khẩu</label>
-					<input type="password" id="password" name="password" class="form-input" placeholder="Mật khẩu của bạn" required>
-					<div class="forgot-password">
-						<a href="{{ route('auth.forgot') }}">Quên mật khẩu?</a>
-					</div>
-				</div>
-
-				<div class="checkbox-group">
-					<input type="checkbox" id="remember" name="remember" class="checkbox" checked>
-					<label for="remember" class="checkbox-label">Giữ tôi luôn đăng nhập</label>
-				</div>
-
-				<button type="submit" class="btn-primary">Đăng nhập</button>
-			</form>
-
-			<button onclick="window.location.href='{{ route('auth.signup') }}'" class="btn-secondary">
+			<a href="{{ route('auth.register') }}" class="btn-secondary">
 				Tạo tài khoản mới
-			</button>
+			</a>
 
 			<div class="divider">
 				<span class="divider-text">Hoặc, đăng nhập thông qua Google</span>
 			</div>
 
-			<a href="{{ route('auth.google.direct') }}" class="google-btn">
-				<div class="google-logo">
-					<svg width="20" height="20" viewBox="0 0 24 24">
-						<path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-						<path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-						<path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-						<path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-					</svg>
-				</div>
+			<a href="{{ route('auth.google') }}" class="google-btn">
+				<svg width="20" height="20" viewBox="0 0 24 24">
+					<path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+					<path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+					<path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+					<path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+				</svg>
 				Đăng nhập với Google
 			</a>
+
+			<div class="register-link">
+				Chưa có tài khoản? <a href="{{ route('auth.register') }}">Đăng ký ngay</a>
+			</div>
 		</div>
 
-		<!-- Right Panel - Background -->
 		<div class="right-panel">
 			<div class="main-logo"></div>
-
 			<div class="floating-icons">
-				<div class="floating-icon">💼</div>
 				<div class="floating-icon">📊</div>
-				<div class="floating-icon">🎯</div>
 				<div class="floating-icon">📍</div>
+				<div class="floating-icon">🎯</div>
+				<div class="floating-icon">💼</div>
 				<div class="floating-icon">W</div>
 				<div class="floating-icon">⚡</div>
 			</div>
-
 			<div class="cloud-bottom"></div>
 		</div>
 	</div>
-
 </body>
 </html>
