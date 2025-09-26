@@ -32,8 +32,6 @@ Route::get('/auth/google-callback', [AuthController::class, 'handleGoogleCallbac
 Route::get('/auth/forgot', [AuthController::class, 'forgotPassword'])->name('auth.forgot');
 Route::get('/auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
-// Profile routes (cần đăng nhập)
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
-    Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
-});
+// Profile routes - tạm thời bỏ middleware để test
+Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
