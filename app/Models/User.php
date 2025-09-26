@@ -2,26 +2,39 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    protected $primaryKey = 'user_id'; // Sử dụng user_id làm khóa chính
+    use HasFactory, Notifiable;
+
+    // Định nghĩa primary key
+    protected $primaryKey = 'user_id';
+    public $incrementing = true;
+    protected $keyType = 'int';
 
     protected $fillable = [
-        'email',
         'sub',
+        'email',
         'full_name',
         'phone',
-        'job_title',
         'avatar_url',
+        'google_id',
+        'job_title',
         'department_id',
         'role_id',
-        'google_id',
     ];
 
-    // Bỏ password_hash vì Cognito quản lý mật khẩu
-    protected $hidden = ['password_hash'];
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
 
     // Quan hệ với bảng departments và roles
     public function department()

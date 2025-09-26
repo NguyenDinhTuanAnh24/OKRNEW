@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProfileController;
 
 // Dashboard
 Route::get('/dashboard', function () {
@@ -30,3 +31,9 @@ Route::get('/auth/google-callback', [AuthController::class, 'handleGoogleCallbac
 // Other routes
 Route::get('/auth/forgot', [AuthController::class, 'forgotPassword'])->name('auth.forgot');
 Route::get('/auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
+
+// Profile routes (cần đăng nhập)
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
+});

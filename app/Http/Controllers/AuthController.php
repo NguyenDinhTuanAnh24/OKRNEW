@@ -1,10 +1,13 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use App\Models\User;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
 class AuthController extends Controller
 {
@@ -138,58 +141,6 @@ class AuthController extends Controller
         Auth::login($user);
 
         return redirect('/dashboard')->with('success', 'Đăng nhập thành công từ ' . $provider);
-    }
-
-    // Xử lý callback từ Google OAuth
-    public function handleGoogleCallback(Request $request)
-    {
-        $code = $request->query('code');
-        if (!$code) {
-            return redirect('/login')->with('error', 'Đăng nhập Google thất bại');
-        }
-
-        // Gửi yêu cầu lấy token từ Google
-        $tokenUrl = 'https://oauth2.googleapis.com/token';
-        $requestData = [
-            'grant_type' => 'authorization_code',
-            'client_id' => env('GOOGLE_CLIENT_ID', '291124312824-b9ud5185shpcist3fac89e18qoitkp0l.apps.googleusercontent.com'),
-            'client_secret' => env('GOOGLE_CLIENT_SECRET'),
-            'code' => $code,
-            'redirect_uri' => 'http://localhost:8000/auth/google-callback',
-        ];
-
-        $response = Http::asForm()->post($tokenUrl, $requestData);
-
-        if ($response->failed()) {
-            \Log::error("Google token request failed: " . $response->body());
-            return redirect('/login')->with('error', 'Lỗi lấy token từ Google');
-        }
-
-        $tokens = $response->json();
-        $accessToken = $tokens['access_token'];
-
-        // Lấy thông tin user từ Google
-        $userResponse = Http::withToken($accessToken)->get('https://www.googleapis.com/oauth2/v2/userinfo');
-        
-        if ($userResponse->failed()) {
-            return redirect('/login')->with('error', 'Không thể lấy thông tin người dùng');
-        }
-
-        $userData = $userResponse->json();
-
-        // Lưu vào database
-        $user = User::updateOrCreate(
-            ['email' => $userData['email']],
-            [
-                'email' => $userData['email'],
-                'full_name' => $userData['name'],
-                'avatar_url' => $userData['picture'],
-                'google_id' => $userData['id'],
-            ]
-        );
-
-        Auth::login($user);
-        return redirect('/dashboard')->with('success', 'Đăng nhập thành công với Google!');
     }
 
     // Phát hiện provider từ token data
