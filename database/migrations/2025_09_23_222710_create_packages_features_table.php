@@ -12,6 +12,7 @@ return new class extends Migration
             $table->foreignId('packages_id')->constrained('packages','packages_id')->cascadeOnDelete();
             $table->foreignId('features_id')->constrained('features','features_id')->cascadeOnDelete();
             $table->primary(['packages_id','features_id']);
+            $table->timestamps();
         });
     }
 

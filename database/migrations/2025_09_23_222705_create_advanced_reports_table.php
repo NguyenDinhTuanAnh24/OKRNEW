@@ -10,10 +10,11 @@ return new class extends Migration
     {
         Schema::create('advanced_reports', function (Blueprint $table) {
             $table->id('report_id');
-            $table->string('report_type');
+            $table->string('report_type')->charset('utf8mb4')->collation('utf8mb4_unicode_ci');
             $table->date('data')->nullable();
             $table->foreignId('user_id')->constrained('users','user_id')->cascadeOnDelete();
             $table->foreignId('cycle_id')->constrained('cycles','cycle_id')->cascadeOnDelete();
+            $table->timestamps();
         });
     }
 

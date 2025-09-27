@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id('collab_id');
             $table->foreignId('user_id')->constrained('users','user_id')->cascadeOnDelete();
             $table->foreignId('objective_id')->constrained('objectives','objective_id')->cascadeOnDelete();
+            $table->timestamps();
         });
     }
 
