@@ -59,7 +59,7 @@ class AuthController extends Controller
     {
         $code = $request->query('code');
         if (!$code) {
-            return redirect('/dashboard')->with('error', 'Đăng nhập thất bại');
+            return redirect('/auth.redirect')->with('error', 'Đăng nhập thất bại');
         }
 
         // Gửi yêu cầu lấy token
@@ -81,7 +81,7 @@ class AuthController extends Controller
 
         if ($response->failed()) {
             Log::error("Token request failed: " . $response->body());
-            return redirect('/dashboard')->with('error', 'Lỗi lấy token: ' . $response->body());
+            return redirect('/auth.redirect')->with('error', 'Lỗi lấy token: ' . $response->body());
         }
 
         $tokens = $response->json();
@@ -90,13 +90,13 @@ class AuthController extends Controller
         // Lấy ID token (chứa thông tin người dùng)
         $idToken = $tokens['id_token'] ?? null;
         if (!$idToken) {
-            return redirect('/dashboard')->with('error', 'Không tìm thấy ID token');
+            return redirect('/auth.redirect')->with('error', 'Không tìm thấy ID token');
         }
 
         // Giải mã ID token để lấy thông tin
         $tokenParts = explode('.', $idToken);
         if (count($tokenParts) !== 3) {
-            return redirect('/dashboard')->with('error', 'ID token không hợp lệ');
+            return redirect('/auth.redirect')->with('error', 'ID token không hợp lệ');
         }
 
         $payload = base64_decode(str_replace(['-', '_'], ['+', '/'], $tokenParts[1]));
@@ -111,7 +111,7 @@ class AuthController extends Controller
         $picture = $userData['picture'] ?? null;
 
         if (!$sub || !$email) {
-            return redirect('/dashboard')->with('error', 'Không thể lấy thông tin người dùng từ ID token');
+            return redirect('/auth.redirect')->with('error', 'Không thể lấy thông tin người dùng từ ID token');
         }
 
         // Xác định provider từ token data
@@ -136,9 +136,11 @@ class AuthController extends Controller
 
         Log::info("User saved/updated: " . $user->email . " via " . $provider);
 
-        Auth::login($user);
 
-        return redirect('/dashboard')->with('success', 'Đăng nhập thành công từ ' . $provider);
+    Auth::login($user);
+    Log::info('User after login: ' . json_encode(Auth::user()));
+
+        return redirect()->route('dashboard')->with('success', 'Đăng nhập thành công từ ' . $provider);
     }
 
     // Phát hiện provider từ token data

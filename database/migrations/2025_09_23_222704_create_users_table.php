@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id('user_id');
+            $table->string('sub')->unique()->nullable();
             $table->string('email')->unique();
             $table->string('password_hash')->nullable();
             $table->string('full_name')->nullable()->charset('utf8mb4')->collation('utf8mb4_unicode_ci');
@@ -18,7 +19,7 @@ return new class extends Migration
             $table->string('avatar_url')->nullable();
             $table->foreignId('department_id')->nullable()->constrained('departments','department_id')->nullOnDelete();
             $table->foreignId('role_id')->nullable()->constrained('roles','role_id')->nullOnDelete();
-            $table->integer('google_id')->nullable();
+            $table->string('google_id',225)->nullable();
             $table->timestamps();
         });
     }

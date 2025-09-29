@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
 </head>
 <body>
+    @auth
     <div class="container flex flex-row min-h-screen">
         <!-- Sidebar -->
         <div class="sidebar flex flex-col">
@@ -17,6 +18,7 @@
                 <div class="user-info container flex flex-row justify-center items-center">
                     @php
                         $user = Auth::user();
+                        // \Log::info('Layout user:', ['user' => $user]);
                         $avatar = $user && $user->avatar_url ? asset($user->avatar_url) : asset('images/default.png');
                         $name = $user && $user->full_name ? $user->full_name : 'User';
                     @endphp
@@ -24,12 +26,15 @@
                     <span class="container">{{ $name }}</span>
                 </div>
                 <div id="detail" class="user-detail flex flex-col justify-center">
-                    <a href="#" class="child-detail">Hồ sơ / Trang của tôi</a>
-                    <a href="{{ route('auth.logout') }}" class="child-detail">Đăng xuất</a>
+                    <a href="{{ route('profile.show') }}" class="child-detail">Hồ sơ / Trang của tôi</a>
+                    <form action="{{ route('auth.logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="child-detail">Đăng xuất</button>
+                    </form>
                 </div>
             </div>
             <nav class="container flex flex-col justify-center items-center">
-                <a href="{{ asset('dashboard')}}" class="tag container">
+                <a href="{{ route('dashboard') }}" class="tag container">
                     <span>Home</span>
                 </a>
                 <a href="#" class="tag container">
@@ -51,6 +56,7 @@
             @yield('content')
         </main>
     </div>
+    @endauth
 
     <script>
         const toggleProfile = document.getElementById('info');
