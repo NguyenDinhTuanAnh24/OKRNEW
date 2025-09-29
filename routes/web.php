@@ -1,8 +1,7 @@
 <?php
 
-use App\Http\Controllers\TeamOkrController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\KeyResultController;
+use App\Http\Controllers\CycleController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -36,3 +35,7 @@ Route::get('/auth/signup', [AuthController::class, 'redirectToSignup'])->name('a
 Route::get('/auth/callback', [AuthController::class, 'handleCallback'])->name('auth.callback');
 Route::get('/auth/forgot', [AuthController::class, 'forgotPassword'])->name('auth.forgot');
 Route::get('/auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
+
+
+//Routes cho Cycle
+Route::resource('cycles', CycleController::class);

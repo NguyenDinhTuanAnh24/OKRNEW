@@ -1,119 +1,35 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>OKR | FOCUS - Welcome</title>
-	<style>
-		:root {
-			--bg-primary: #ffffff;
-			--bg-secondary: #2563eb;
-			--bg-card: #333333;
-			--text-primary: #ffffff;
-			--text-secondary: #000000;
-			--text-muted: #999999;
-			--accent-green: #4ade80;
-			--accent-blue: #3b82f6;
-			--accent-orange: #f59e0b;
-			--border: #404040;
-			--shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-		}
-
-		* {
-			box-sizing: border-box;
-			margin: 0;
-			padding: 0;
-		}
-
-		body {
-			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-			background: var(--bg-primary);
-			color: var(--text-primary);
-			line-height: 1.6;
-		}
-
-		/* Header */
-		.header {
-			background: var(--bg-secondary);
-			border-bottom: 1px solid var(--border);
-			padding: 1rem 2rem;
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-		}
-
-		.logo {
-			font-size: 1.5rem;
-			font-weight: 800;
-			color: var(--text-primary);
-		}
-
-		/* Login/Register buttons */
-		.auth-buttons {
-			display: flex;
-			gap: 1rem;
-		}
-
-		.btn-login {
-			background: var(--accent-green);
-			color: white;
-			padding: 0.75rem 1.5rem;
-			border-radius: 8px;
-			text-decoration: none;
-			font-weight: 600;
-			transition: background 0.2s;
-		}
-
-		.btn-login:hover {
-			background: #22c55e;
-		}
-
-		.btn-register {
-			background: transparent;
-			background-color: #fb6e6e;
-			color: var(--text-primary);
-			border: 1px solid var(--border);
-			padding: 0.75rem 1.5rem;
-			border: none;
-			border-radius: 8px;
-			text-decoration: none;
-			font-weight: 600;
-			transition: background 0.2s;
-		}
-
-		.btn-register:hover {
-			background: var(--bg-secondary);
-			background-color: #f93f3f;
-		}
-
-		/* Responsive */
-		@media (max-width: 768px) {
-			.header {
-				flex-direction: column;
-				gap: 1rem;
-			}
-		}
-	</style>
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>OKRun</title>
+	<link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
+	<link rel="stylesheet" href="{{ asset('dist/output.css') }}">
 </head>
 <body>
-	<!-- Header -->
-	<div class="header">
-		<div class="logo">OKR | FOCUS</div>
-		<div class="auth-buttons">
-			<a href="{{ route('auth.login') }}" class="btn-login">Đăng nhập</a>
-			<a href="{{ route('auth.register') }}" class="btn-register">Đăng ký</a>
+	<div class="container flex flex-col items-center">
+		<div class="toptab flex items-center justify-center">
+			<ul class="flex flex-row items-center">
+				<li class=" flex justify-center items-center"><a href="{{ asset('landingpage')}}">Trang chủ</a></li>
+				<li class=" flex justify-center items-center"><a href="#">Tính năng</a></li>
+				<li class=" flex justify-center items-center"><a href="#">Liên hệ</a></li>
+			</ul>
 		</div>
-	</div>
-
-	<!-- Landing page content -->
-	<div style="text-align: center; padding: 4rem 2rem;">
-		<h1 style="font-size: 3rem; margin-bottom: 1rem; color: var(--text-secondary);">OKR | FOCUS</h1>
-		<p style="font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 3rem; max-width: 600px; margin-left: auto; margin-right: auto;">
-			Quản lý mục tiêu và kết quả then chốt một cách hiệu quả. Đăng nhập để bắt đầu sử dụng dashboard.
-		</p>
-		<div class="auth-buttons" style="justify-content: center;">
-			<a href="{{ route('auth.login') }}" class="btn-login">Đăng nhập</a>
-			<a href="{{ route('auth.register') }}" class="btn-register">Đăng ký</a>
+		<div class="content flex flex-col items-center">
+			<div class="title flex flex-row justify-center items-center">
+				<h1>Phần mềm OKR - Đột phá Quản trị Mục tiêu</h1>
+				-
+				<h2>Tăng hiệu suất đội nhóm, theo dõi tiến độ dễ dàng và đạt mục tiêu nhanh chóng!</h2>
+			</div>
+			<div class="describe flex items-center justify-center">
+				Trong bối cảnh môi trường kinh doanh toàn cầu ngày càng phức tạp và cạnh tranh, việc thiết lập, theo dõi và hoàn thành các mục tiêu chiến lược là yếu tố sống còn để đảm bảo sự phát triển bền vững của doanh nghiệp. Phần mềm OKR (Objectives and Key Results) đã và đang trở thành công cụ quản trị mục tiêu hàng đầu, được các tập đoàn lớn như Google, Intel, Amazon, LinkedIn và Twitter sử dụng để định hướng chiến lược, nâng cao hiệu suất và thúc đẩy sự phối hợp giữa các phòng ban. Không chỉ là một công cụ kỹ thuật, phần mềm OKR còn mang đến sự thay đổi về văn hóa làm việc, giúp đội ngũ từ cấp lãnh đạo đến nhân viên hiểu rõ vai trò của mình trong bức tranh lớn của tổ chức. Với giao diện thân thiện, tích hợp mượt mà với các nền tảng công nghệ phổ biến, khả năng theo dõi tiến độ theo thời gian thực và tính linh hoạt phù hợp cho mọi quy mô doanh nghiệp – từ startup nhỏ, doanh nghiệp vừa và nhỏ (SME) đến các tập đoàn đa quốc gia – phần mềm OKR là giải pháp không thể thiếu trong kỷ nguyên chuyển đổi số.
+			</div>
+			<div class="perchase flex flex-row justify-center items-center">
+				<button class="btn1"><a href="{{ asset('register')}}">Dùng thử miễn phí</a></button>
+				<button class="btn2"><a href="#">Đăng ký</a></button>
+			</div>
 		</div>
 	</div>
 </body>
