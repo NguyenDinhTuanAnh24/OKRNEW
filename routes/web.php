@@ -5,6 +5,9 @@ use App\Http\Controllers\CycleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ObjectiveController;
+use App\Http\Controllers\KeyResultController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\MyOKRController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -31,6 +34,9 @@ Route::group(['middleware' => ['web']], function () {
     //Routes cho Cycle
     Route::resource('cycles', CycleController::class);
 
+    //Routes cho Department
+    Route::resource('departments', DepartmentController::class);
+
     // Routes cho Profile
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -40,5 +46,24 @@ Route::group(['middleware' => ['web']], function () {
     // Objectives Routes
     Route::resource('objectives', ObjectiveController::class);
     // Route::get('/dashboard', [ObjectiveController::class, 'dashboard'])->name('dashboard');
-    Route::get('/objectives/create/tailwind', [ObjectiveController::class, 'createTailwind'])->name('objectives.create.tailwind');
+    // Route::get('/objectives/create/tailwind', [ObjectiveController::class, 'createTailwind'])->name('objectives.create.tailwind');
+
+    // Key Results Routes
+    Route::get('/objectives/{objective}/key-results',
+    [KeyResultController::class, 'show']
+    )->name('key_results.show');
+
+    // Form tạo mới Key Result
+    Route::get('/objectives/{objective}/key-results/create',
+        [KeyResultController::class, 'create']
+    )->name('key_results.create');
+
+    // Lưu Key Result
+    Route::post('/objectives/{objective}/key-results',
+        [KeyResultController::class, 'store']
+    )->name('key_results.store');
+
+    Route::delete('/objectives/{objective}/key-results/{kr}', 
+        [KeyResultController::class, 'destroy']
+    )->name('key_results.destroy');
 });

@@ -661,6 +661,15 @@ video {
     display: flex;
 }
 
+.grid {
+    display: grid;
+}
+
+.grid-temp {
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: auto;
+}
+
 .inline-flex {
     display: inline-flex;
 }
@@ -709,6 +718,14 @@ video {
     height: 6rem;
 }
 
+.h-150 {
+    height: 150px;
+}
+
+.h-200 {
+    height: 200px;
+}
+
 .min-h-screen {
     min-height: 100vh;
 }
@@ -743,6 +760,10 @@ video {
 
 .w-150 {
     width: 150px;
+}
+
+.w-200 {
+    width: 200px;
 }
 
 /* .mw-200 {

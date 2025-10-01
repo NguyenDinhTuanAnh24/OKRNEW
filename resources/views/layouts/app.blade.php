@@ -23,7 +23,11 @@
                         $avatar = $user && $user->avatar_url ? asset($user->avatar_url) : asset('images/default.png');
                         $name = $user && $user->full_name ? $user->full_name : 'User';
                     @endphp
-                    <img src="{{ $avatar }}" alt="Avatar" id="info" class="logo">
+                    <img src="{{ $avatar }}" 
+                        alt="Avatar" 
+                        id="info" 
+                        class="logo"
+                        style="width:60px; height:60px; border-radius:50%; object-fit:cover;">
                     <span class="container">{{ $name }}</span>
                 </div>
                 <div id="detail" class="user-detail flex flex-col justify-center">
@@ -42,17 +46,14 @@
                 <a href="#" class="tag container">
                     <span>Team</span>
                 </a>
-                <a href="#" class="tag container">
-                    <span>Reports</span>
-                </a>
-                <a href="#" class="tag container">
-                    <span>Settings</span>
-                </a>
                 <a href="{{ route('cycles.index') }}" class="tag container">
                     <span>Cycles</span>
                 </a>
                 <a href="{{ route('objectives.index') }}" class="tag container">
                     <span>Objectives</span>
+                </a>
+                <a href="{{ route('departments.index') }}" class="tag container">
+                    <span>Departments</span>
                 </a>
             </nav>
         </div>

@@ -67,7 +67,7 @@ class AuthController extends Controller
                 'user_id' => Auth::id(),
                 'session_keys' => array_keys(Session::all())
             ]);
-            return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để đổi mật khẩu.');
+            return redirect()->route('auth.login')->with('error', 'Bạn cần đăng nhập để đổi mật khẩu.');
         }
 
         try {
@@ -106,7 +106,7 @@ class AuthController extends Controller
             Session::forget('cognito_access_token');
             Session::forget('cognito_refresh_token');
             Session::forget('cognito_id_token');
-            return redirect()->route('login')->with('success', 'Đổi mật khẩu thành công! Vui lòng đăng nhập lại.');
+            return redirect()->route('auth.login')->with('success', 'Đổi mật khẩu thành công! Vui lòng đăng nhập lại.');
 
         } catch (AwsException $e) {
             $errorMessage = $e->getAwsErrorMessage();

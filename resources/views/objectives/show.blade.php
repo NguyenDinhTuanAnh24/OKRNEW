@@ -113,12 +113,12 @@
 
                 <!-- Key Results Section -->
                 <div class="mb-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
+                    {{-- <div class="d-flex justify-content-between align-items-center mb-3">
                         <h5><i class="bi bi-key"></i> Key Results</h5>
                         <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addKRModal">
                             <i class="bi bi-plus-circle"></i> Add Key Result
                         </button>
-                    </div>
+                    </div> --}}
 
                     @if($objective->keyResults->count() > 0)
                         <div class="list-group">
@@ -158,6 +158,11 @@
                                     <small class="text-muted">{{ $keyResult->progress ?? 0 }}% complete</small>
                                 </div>
                             @endforeach
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addKRModal">
+                                <a href="{{ route('key_results.create', $objective->objective_id) }}" class="btn btn-primary">
+                                + Thêm KR
+                            </a>
+                            </button>
                         </div>
                     @else
                         <div class="text-center py-4">
@@ -165,7 +170,9 @@
                             <h6 class="mt-3">No Key Results Yet</h6>
                             <p class="text-muted">Add key results to track your progress towards this objective.</p>
                             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addKRModal">
-                                <i class="bi bi-plus-circle"></i> Add First Key Result
+                                <a href="{{ route('key_results.create', $objective->objective_id) }}" class="btn btn-primary">
+                                + Thêm KR
+                            </a>
                             </button>
                         </div>
                     @endif
