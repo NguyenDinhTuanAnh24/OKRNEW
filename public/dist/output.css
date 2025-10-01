@@ -705,6 +705,10 @@ video {
     height: 0.875rem;
 }
 
+.h-24 {
+    height: 6rem;
+}
+
 .min-h-screen {
     min-height: 100vh;
 }
@@ -733,6 +737,18 @@ video {
     width: 0.875rem;
 }
 
+.w-24 {
+    width: 6rem;
+}
+
+.w-150 {
+    width: 150px;
+}
+
+/* .mw-200 {
+    min-width: 200px;
+} */
+
 .w-\[448px\] {
     width: 448px;
 }
@@ -747,6 +763,10 @@ video {
 
 .max-w-none {
     max-width: none;
+}
+
+.ww {
+    word-wrap: break-word;
 }
 
 .flex-1 {
