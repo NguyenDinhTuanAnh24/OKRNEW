@@ -1,6 +1,4 @@
-@extends('layouts.tailwind')
-
-@section('title', 'Create Objective')
+@extends('layouts.app')
 
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8">

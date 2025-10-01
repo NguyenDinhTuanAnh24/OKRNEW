@@ -1,14 +1,11 @@
-@extends('layouts.tailwind')
-
-@section('title', 'OKR Dashboard')
+@extends('layouts.app')
 
 @section('content')
 <div class="space-y-8">
     <!-- Header -->
     <div class="flex justify-between items-center">
-        <a href="{{ asset('dashboard') }}">Quay lại</a>
         <h1 class="text-3xl font-bold text-gray-900">OKR Dashboard</h1>
-        <a href="{{ route('objectives.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+        <a href="{{ route('objectives.create') }}" class="bg-blue-600 hover:bg-blue-700 text-black px-4 py-2 rounded-lg font-medium transition-colors">
             + New Objective
         </a>
     </div>
