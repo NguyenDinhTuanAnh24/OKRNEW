@@ -64,7 +64,7 @@
         </div> --}}
 
         <button type="submit" class="btn-success">Lưu</button>
-        <a href="{{ route('key_results.show', $objective->objective_id) }}" class="btn-secondary">Hủy</a>
+        <a href="{{ route('objectives.show', $objective->objective_id) }}" class="btn-secondary">Hủy</a>
     </form>
 </div>
 

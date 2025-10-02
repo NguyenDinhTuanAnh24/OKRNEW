@@ -11,6 +11,9 @@ class ProfileController extends Controller
     public function show()
     {
         $user = Auth::user();
+        if (!$user) {
+            return redirect()->route('login')->withErrors('Bạn cần đăng nhập để xem hồ sơ.');
+        }
         return view('profile.show', compact('user'));
     }
 

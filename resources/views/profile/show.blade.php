@@ -203,12 +203,19 @@
             <h2 class="section-title">Hồ sơ cá nhân</h2>
             <div class="profile-info">
                 @if($user->avatar_url)
-                    <img src="{{ $user->avatar_url }}" alt="Avatar" class="avatar">
+                    <img src="{{$user->avatar_url }}" alt="Avatar" 
+                        style="width:60px; height:60px; border-radius:50%; object-fit:cover;">
+                @elseif($user)
+                    <div class="avatar">
+                        {{ substr($user->full_name ?? optional($user)->email, 0, 1) }}
+                    </div>
                 @else
-                    <div class="avatar">{{ substr($user->full_name ?? $user->email, 0, 1) }}</div>
+                    <div class="avatar">?</div>
                 @endif
-                <h3>{{ $user->full_name ?? 'Chưa cập nhật' }}</h3>
-                <p>{{ $user->email }}</p>
+
+                <h3>{{$user->full_name ?? 'Chưa cập nhật' }}</h3>
+                <p>{{ $user->email ?? 'Không có email' }}</p>
+
                 @if($user->job_title)
                     <p>{{ $user->job_title }}</p>
                 @endif
