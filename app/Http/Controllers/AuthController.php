@@ -31,7 +31,6 @@ class AuthController extends Controller
         ]);
     }
 
-    // Hiện form đổi mật khẩu
     public function showChangePasswordForm()
     {
         return view('auth.change-password');
@@ -67,15 +66,25 @@ class AuthController extends Controller
                 'user_id' => Auth::id(),
                 'session_keys' => array_keys(Session::all())
             ]);
-            return redirect()->route('auth.login')->with('error', 'Bạn cần đăng nhập để đổi mật khẩu.');
+            return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để đổi mật khẩu.');
         }
 
         try {
+            // Bước 1: Verify access token hợp lệ trước khi đổi mật khẩu
+            Log::info('Verifying access token with getUser API', [
+                'user_id' => Auth::id(),
+                'access_token_length' => strlen($accessToken)
+            ]);
+            $this->cognitoClient->getUser([
+                'AccessToken' => $accessToken,
+            ]);
+            Log::info('Access token verified successfully', ['user_id' => Auth::id()]);
+
+            // Bước 2: Gọi changePassword nếu token OK
             Log::info('Calling Cognito changePassword API', [
                 'user_id' => Auth::id(),
                 'access_token_length' => strlen($accessToken)
             ]);
-            // Gọi API đổi mật khẩu của Cognito
             $result = $this->cognitoClient->changePassword([
                 'AccessToken' => $accessToken,
                 'PreviousPassword' => $request->old_password,
@@ -103,25 +112,52 @@ class AuthController extends Controller
             Log::info('User logged out after password change', [
                 'user_id' => Auth::id()
             ]);
-            Session::forget('cognito_access_token');
-            Session::forget('cognito_refresh_token');
-            Session::forget('cognito_id_token');
-            return redirect()->route('auth.login')->with('success', 'Đổi mật khẩu thành công! Vui lòng đăng nhập lại.');
+            return redirect()->route('login')->with('success', 'Đổi mật khẩu thành công! Vui lòng đăng nhập lại.');
 
         } catch (AwsException $e) {
+            $errorCode = $e->getAwsErrorCode(); // Lấy code lỗi chính xác
             $errorMessage = $e->getAwsErrorMessage();
-            Log::error("Change password failed: " . $errorMessage);
+            Log::error("Change password failed", [
+                'error_code' => $errorCode,
+                'error_message' => $errorMessage,
+                'user_id' => Auth::id()
+            ]);
 
-            if (strpos($errorMessage, 'NotAuthorizedException') !== false || strpos($errorMessage, 'InvalidAccessTokenException') !== false) {
-                return redirect()->route('auth.login')->with('error', 'Phiên đăng nhập không hợp lệ. Vui lòng đăng nhập lại.');
+            $translatedMessage = 'Có lỗi xảy ra. Vui lòng thử lại sau.';
+
+            if (strpos($errorMessage, 'Password did not conform with policy') !== false) {
+                if (strpos($errorMessage, 'numeric characters') !== false) {
+                    $translatedMessage = 'Mật khẩu phải chứa ít nhất một số.';
+                } elseif (strpos($errorMessage, 'uppercase characters') !== false) {
+                    $translatedMessage = 'Mật khẩu phải chứa ít nhất một chữ hoa.';
+                } elseif (strpos($errorMessage, 'lowercase characters') !== false) {
+                    $translatedMessage = 'Mật khẩu phải chứa ít nhất một chữ thường.';
+                } elseif (strpos($errorMessage, 'special characters') !== false) {
+                    $translatedMessage = 'Mật khẩu phải chứa ít nhất một ký tự đặc biệt.';
+                } else {
+                    $translatedMessage = 'Mật khẩu không đáp ứng chính sách bảo mật.';
+                }
+            } elseif (strpos($errorMessage, 'must be at least 8 characters') !== false) {
+                $translatedMessage = 'Mật khẩu mới phải có ít nhất 8 ký tự.';
+            } elseif (
+                strpos($errorMessage, 'Incorrect password') !== false ||
+                strpos($errorMessage, 'InvalidPassword') !== false ||
+                strpos($errorMessage, 'Incorrect username or password') !== false || // Thêm để bắt case phổ biến
+                ($errorCode === 'NotAuthorizedException') // Sử dụng error code để detect mật khẩu cũ sai
+            ) {
+                $translatedMessage = 'Mật khẩu cũ không đúng.'; // Dịch và thông báo cụ thể
+            } elseif ($errorCode === 'InvalidAccessTokenException') {
+                return redirect()->route('login')->with('error', 'Phiên đăng nhập không hợp lệ. Vui lòng đăng nhập lại.');
+            } elseif ($errorCode === 'LimitExceededException') {
+                $translatedMessage = 'Quá nhiều lần thử. Vui lòng thử lại sau.';
+            } else {
+                Log::warning("Unhandled error", [
+                    'error_code' => $errorCode,
+                    'error_message' => $errorMessage
+                ]);
             }
-            if (strpos($errorMessage, 'Incorrect password') !== false) {
-                return back()->withErrors(['old_password' => 'Mật khẩu cũ không đúng.']);
-            }
-            return back()->withErrors(['error' => 'Lỗi: ' . $errorMessage]);
-        } catch (\Exception $e) {
-            Log::error("Unexpected error: " . $e->getMessage());
-            return back()->withErrors(['error' => 'Có lỗi xảy ra: ' . $e->getMessage()]);
+
+            return back()->withErrors(['error' => $translatedMessage]);
         }
     }
 
