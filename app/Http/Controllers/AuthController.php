@@ -279,6 +279,7 @@ class AuthController extends Controller
             [
                 'sub' => $sub,
                 'email' => $email,
+                'google_id' => $provider === 'Google' ? ($userData['sub'] ?? null) : null,
             ]
         );
 
