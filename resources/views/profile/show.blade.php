@@ -1,6 +1,3 @@
-@php
-    use Illuminate\Support\Facades\Storage;
-@endphp
 @extends('layouts.app')
 
 @section('content')
@@ -10,7 +7,7 @@
         font-family: 'Inter', Arial, sans-serif;
     }
     .main-container {
-        max-width: 900px;
+        max-width: 900px; 
         margin: 40px auto;
         padding: 0 32px;
         position: relative;
@@ -26,7 +23,7 @@
         margin: 0 auto;
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: center; 
     }
     .section-title {
         font-size: 1.5rem;
@@ -52,22 +49,10 @@
         font-size: 2.2rem;
         color: #fff;
     }
-    .profile-info .avatar img {
+    form {
         width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        object-fit: cover;
-    }
-    .profile-info h3 {
-        font-size: 1.15rem;
-        font-weight: 600;
-        color: #22223b;
-        margin-bottom: 4px;
-    }
-    .profile-info p {
-        color: #6b7280;
-        margin-bottom: 2px;
-        font-size: 0.97rem;
+        max-width: 400px;
+        margin: 0 auto;
     }
     form label {
         font-size: 1rem;
@@ -93,15 +78,6 @@
         border-color: #2563eb;
         box-shadow: 0 0 0 2px #bfdbfe;
     }
-    .form-row {
-        display: flex;
-        gap: 18px;
-        flex-wrap: wrap;
-    }
-    .form-row > div {
-        flex: 1 1 45%;
-        min-width: 120px;
-    }
     .form-actions {
         display: flex;
         justify-content: center;
@@ -117,11 +93,11 @@
         font-weight: 600;
         cursor: pointer;
         transition: background 0.2s;
-        display: flex;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
         white-space: nowrap;
+        gap: 8px;
         min-width: 140px;
     }
     .btn-primary:hover {
@@ -190,26 +166,16 @@
         display: block;
         font-size: 0.85rem;
         color: #6b7280;
-        margin-top: -12px;
+        margin-top: -12px; 
         margin-bottom: 16px;
-    }
-
-    form {
-        width: 100%;
-        max-width: 400px;
-        margin: 0 auto;
-    }
-
-    .space-y-6 > * + * {
-        margin-top: 18px !important;
     }
 </style>
 
 <div class="main-container">
     <!-- Tabs nằm trên cùng -->
     <div class="tabs">
-        <button class="tab-button {{ (!$errors->any() && !session('password_success')) ? 'active' : '' }}" onclick="openTab(event, 'tab1')" type="button">Cập nhật thông tin</button>
-        <button class="tab-button {{ ($errors->any() || session('password_success')) ? 'active' : '' }}" onclick="openTab(event, 'tab2')" type="button">Đổi mật khẩu</button>
+        <button class="tab-button {{ (!$errors->any() && !session('password_success')) ? 'active' : '' }}" onclick="openTab(event, 'tab1')">Cập nhật thông tin</button>
+        <button class="tab-button {{ ($errors->any() || session('password_success')) ? 'active' : '' }}" onclick="openTab(event, 'tab2')">Đổi mật khẩu</button>
     </div>
 
     <!-- Nội dung -->
@@ -221,18 +187,18 @@
                     <span>{{ session('success') }}</span>
                 </div>
             @endif
-
             <h2 class="section-title">Hồ sơ cá nhân</h2>
             <div class="profile-info">
-                @if($user->avatar_url && Storage::disk('public')->exists($user->avatar_url))
-                    <img src="{{ Storage::url($user->avatar_url) }}?v={{ $user->updated_at?->setTimezone('Asia/Ho_Chi_Minh')->timestamp ?? time() }}" alt="Avatar" class="avatar">
-                @else
+                @if($user->avatar_url)
+                    <img src="{{$user->avatar_url }}" alt="Avatar" style="width:96px; height:96px; border-radius:50%; object-fit:cover; margin:0 auto;">
+                @elseif($user)
                     <div class="avatar">
-                        {{ substr($user->full_name ?? $user->email, 0, 1) }}
+                        {{ substr($user->full_name ?? optional($user)->email, 0, 1) }}
                     </div>
+                @else
+                    <div class="avatar">?</div>
                 @endif
-
-                <h3>{{ $user->full_name ?? 'Chưa cập nhật' }}</h3>
+                <h3>{{$user->full_name ?? 'Chưa cập nhật' }}</h3>
                 <p>{{ $user->email ?? 'Không có email' }}</p>
             </div>
             <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
@@ -247,7 +213,6 @@
                 </div>
             </form>
         </div>
-
     </div>
 
     <div class="tab-content {{ ($errors->any() || session('password_success')) ? 'active' : '' }}" id="tab2">
@@ -284,30 +249,14 @@
 
 <script>
     function openTab(event, tabId) {
-        // Prevent default form submission
-        event.preventDefault();
-
-        // Hide all tab content
         document.querySelectorAll('.tab-content').forEach(tab => {
             tab.classList.remove('active');
         });
-
-        // Remove active class from all buttons
         document.querySelectorAll('.tab-button').forEach(button => {
             button.classList.remove('active');
         });
-
-        // Show selected tab content
         document.getElementById(tabId).classList.add('active');
-
-        // Add active class to clicked button
         event.target.classList.add('active');
-
-        // Clear any form errors
-        const errorElements = document.querySelectorAll('.alert-error');
-        errorElements.forEach(element => {
-            element.remove();
-        });
     }
 </script>
 @endsection

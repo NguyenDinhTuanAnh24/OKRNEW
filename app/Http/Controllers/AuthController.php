@@ -31,7 +31,6 @@ class AuthController extends Controller
         ]);
     }
 
-    // Hiện form đổi mật khẩu
     public function showChangePasswordForm()
     {
         return view('auth.change-password');
@@ -71,11 +70,21 @@ class AuthController extends Controller
         }
 
         try {
+            // Bước 1: Verify access token hợp lệ trước khi đổi mật khẩu
+            Log::info('Verifying access token with getUser API', [
+                'user_id' => Auth::id(),
+                'access_token_length' => strlen($accessToken)
+            ]);
+            $this->cognitoClient->getUser([
+                'AccessToken' => $accessToken,
+            ]);
+            Log::info('Access token verified successfully', ['user_id' => Auth::id()]);
+
+            // Bước 2: Gọi changePassword nếu token OK
             Log::info('Calling Cognito changePassword API', [
                 'user_id' => Auth::id(),
                 'access_token_length' => strlen($accessToken)
             ]);
-            // Gọi API đổi mật khẩu của Cognito
             $result = $this->cognitoClient->changePassword([
                 'AccessToken' => $accessToken,
                 'PreviousPassword' => $request->old_password,
@@ -103,16 +112,18 @@ class AuthController extends Controller
             Log::info('User logged out after password change', [
                 'user_id' => Auth::id()
             ]);
-            Session::forget('cognito_access_token');
-            Session::forget('cognito_refresh_token');
-            Session::forget('cognito_id_token');
             return redirect()->route('login')->with('success', 'Đổi mật khẩu thành công! Vui lòng đăng nhập lại.');
 
         } catch (AwsException $e) {
+            $errorCode = $e->getAwsErrorCode(); // Lấy code lỗi chính xác
             $errorMessage = $e->getAwsErrorMessage();
-            Log::error("Change password failed: " . $errorMessage);
+            Log::error("Change password failed", [
+                'error_code' => $errorCode,
+                'error_message' => $errorMessage,
+                'user_id' => Auth::id()
+            ]);
 
-            $translatedMessage = 'Có lỗi xảy ra.';
+            $translatedMessage = 'Có lỗi xảy ra. Vui lòng thử lại sau.';
 
             if (strpos($errorMessage, 'Password did not conform with policy') !== false) {
                 if (strpos($errorMessage, 'numeric characters') !== false) {
@@ -128,19 +139,25 @@ class AuthController extends Controller
                 }
             } elseif (strpos($errorMessage, 'must be at least 8 characters') !== false) {
                 $translatedMessage = 'Mật khẩu mới phải có ít nhất 8 ký tự.';
-            } elseif (strpos($errorMessage, 'Incorrect password') !== false) {
-                $translatedMessage = 'Mật khẩu cũ không đúng.';
             } elseif (
-                strpos($errorMessage, 'NotAuthorizedException') !== false ||
-                strpos($errorMessage, 'InvalidAccessTokenException') !== false
+                strpos($errorMessage, 'Incorrect password') !== false ||
+                strpos($errorMessage, 'InvalidPassword') !== false ||
+                strpos($errorMessage, 'Incorrect username or password') !== false || // Thêm để bắt case phổ biến
+                ($errorCode === 'NotAuthorizedException') // Sử dụng error code để detect mật khẩu cũ sai
             ) {
+                $translatedMessage = 'Mật khẩu cũ không đúng.'; // Dịch và thông báo cụ thể
+            } elseif ($errorCode === 'InvalidAccessTokenException') {
                 return redirect()->route('login')->with('error', 'Phiên đăng nhập không hợp lệ. Vui lòng đăng nhập lại.');
+            } elseif ($errorCode === 'LimitExceededException') {
+                $translatedMessage = 'Quá nhiều lần thử. Vui lòng thử lại sau.';
+            } else {
+                Log::warning("Unhandled error", [
+                    'error_code' => $errorCode,
+                    'error_message' => $errorMessage
+                ]);
             }
 
             return back()->withErrors(['error' => $translatedMessage]);
-        } catch (\Exception $e) {
-            Log::error("Unexpected error: " . $e->getMessage());
-            return back()->withErrors(['error' => 'Có lỗi xảy ra: ' . $e->getMessage()]);
         }
     }
 
@@ -256,25 +273,17 @@ class AuthController extends Controller
         $provider = $this->detectProvider($userData);
         Log::info("Detected provider: " . $provider);
 
-        // Lấy role Member mặc định cho user mới
-        $memberRole = \App\Models\Role::where('role_name', 'Member')->first();
-
         // Lưu vào database với thông tin đầy đủ
         $user = User::updateOrCreate(
             ['email' => $email],
             [
                 'sub' => $sub,
                 'email' => $email,
-                'role_id' => $memberRole ? $memberRole->role_id : null, // Gán role Member cho user mới
+                'google_id' => $provider === 'Google' ? ($userData['sub'] ?? null) : null,
             ]
         );
 
         Log::info("User saved/updated: " . $user->email . " via " . $provider);
-
-        // Kiểm tra trạng thái tài khoản trước khi đăng nhập
-        if ($user->status === 'inactive') {
-            return redirect('/login')->withErrors('Tài khoản của bạn đã bị vô hiệu hóa. Vui lòng liên hệ quản trị viên.');
-        }
 
         Auth::login($user);
 
