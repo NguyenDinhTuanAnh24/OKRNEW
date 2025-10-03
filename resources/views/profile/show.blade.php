@@ -1,3 +1,6 @@
+@php
+    use Illuminate\Support\Facades\Storage;
+@endphp
 @extends('layouts.app')
 
 @section('content')
@@ -7,18 +10,10 @@
         font-family: 'Inter', Arial, sans-serif;
     }
     .main-container {
-        max-width: 1200px;
-        margin: 40px auto 0 auto;
+        max-width: 900px;
+        margin: 40px auto;
         padding: 0 32px;
         position: relative;
-    }
-    .forms-flex {
-        display: flex;
-        gap: 40px;
-        justify-content: center;
-        align-items: flex-start;
-        /* margin-top: 48px; */
-        width: 100%;
     }
     .profile-card, .form-section {
         background: #fff;
@@ -26,15 +21,12 @@
         box-shadow: 0 1px 4px 0 rgba(0,0,0,0.06);
         border: 1px solid #e5e7eb;
         padding: 32px 28px;
-        flex: 1 1 0;
-        min-width: 0;
-        max-width: none;
-        box-sizing: border-box;
         width: 100%;
-        /* Make both forms equal width */
+        max-width: 600px;
+        margin: 0 auto;
         display: flex;
         flex-direction: column;
-        justify-content: flex-start;
+        align-items: center;
     }
     .section-title {
         font-size: 1.5rem;
@@ -60,6 +52,12 @@
         font-size: 2.2rem;
         color: #fff;
     }
+    .profile-info .avatar img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+    }
     .profile-info h3 {
         font-size: 1.15rem;
         font-weight: 600;
@@ -80,7 +78,8 @@
     }
     form input[type="text"],
     form input[type="email"],
-    form input[type="password"] {
+    form input[type="password"],
+    form input[type="file"] {
         width: 100%;
         padding: 10px 14px;
         border: 1px solid #d1d5db;
@@ -90,9 +89,7 @@
         transition: border 0.2s, box-shadow 0.2s;
         box-sizing: border-box;
     }
-    form input[type="text"]:focus,
-    form input[type="email"]:focus,
-    form input[type="password"]:focus {
+    form input:focus {
         border-color: #2563eb;
         box-shadow: 0 0 0 2px #bfdbfe;
     }
@@ -115,7 +112,7 @@
         color: #fff;
         border: none;
         border-radius: 6px;
-        padding: 10px 32px;
+        padding: 10px 24px;
         font-size: 1rem;
         font-weight: 600;
         cursor: pointer;
@@ -126,7 +123,6 @@
         gap: 8px;
         white-space: nowrap;
         min-width: 140px;
-        max-width: 200px;
     }
     .btn-primary:hover {
         background: #1d4ed8;
@@ -136,181 +132,182 @@
         font-size: 0.95rem;
         margin-left: 10px;
     }
+
+    /* Tabs ngang */
+    .tabs {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 0; /* đưa sát card */
+        justify-content: center;
+        margin-bottom: 30px;
+    }
+    .tab-button {
+        background: #e5e7eb;
+        color: #374151;
+        border: none;
+        border-radius: 6px 6px 0 0;
+        padding: 10px 20px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.2s, color 0.2s;
+    }
+    .tab-button.active {
+        background: #2563eb;
+        color: #fff;
+    }
+    .tab-content {
+        display: none;
+        width: 100%;
+    }
+    .tab-content.active {
+        display: block;
+    }
+
+    /* Thông báo */
+    .alert {
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto 20px auto;
+        padding: 12px 16px;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .alert-success {
+        background: #ecfdf5;
+        border: 1px solid #a7f3d0;
+        color: #065f46;
+    }
+    .alert-error {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: #b91c1c;
+    }
+    .password-policy {
+        display: block;
+        font-size: 0.85rem;
+        color: #6b7280;
+        margin-top: -12px;
+        margin-bottom: 16px;
+    }
+
+    form {
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
     .space-y-6 > * + * {
         margin-top: 18px !important;
-    }
-    @media (max-width: 1200px) {
-        .main-container {
-            max-width: 100vw;
-            padding: 0 8px;
-        }
-        .forms-flex {
-            gap: 20px;
-        }
-    }
-    @media (max-width: 900px) {
-        .forms-flex {
-            flex-direction: column;
-            align-items: stretch;
-            gap: 32px;
-        }
-        .profile-card, .form-section {
-            max-width: 100%;
-        }
-        .main-container {
-            padding: 0 2px;
-        }
-    }
-    @media (max-width: 600px) {
-        .profile-card, .form-section {
-            padding: 18px 6px;
-        }
-        .main-container {
-            padding: 0 2px;
-        }
-        .back-btn {
-            top: -6px;
-            left: 0;
-            font-size: 0.95rem;
-            padding: 7px 12px;
-        }
-    }
-    /* Prevent back-btn from overlapping forms */
-    .back-btn {
-        margin-bottom: 0;
-        margin-top: 0;
-    }
-    .main-container {
-        padding-top: 40px;
     }
 </style>
 
 <div class="main-container">
-    <div class="forms-flex">
+    <!-- Tabs nằm trên cùng -->
+    <div class="tabs">
+        <button class="tab-button {{ (!$errors->any() && !session('password_success')) ? 'active' : '' }}" onclick="openTab(event, 'tab1')" type="button">Cập nhật thông tin</button>
+        <button class="tab-button {{ ($errors->any() || session('password_success')) ? 'active' : '' }}" onclick="openTab(event, 'tab2')" type="button">Đổi mật khẩu</button>
+    </div>
+
+    <!-- Nội dung -->
+    <div class="tab-content {{ (!$errors->any() && !session('password_success')) ? 'active' : '' }}" id="tab1">
         <div class="profile-card">
-            <!-- Success Message -->
             @if(session('success'))
-                <div class="mb-4 bg-green-50 border border-green-200 rounded-md p-4">
-                    <div class="flex">
-                        <i class="fas fa-check-circle text-green-400"></i>
-                        <div class="ml-3">
-                            <p class="text-sm font-medium text-green-800">{{ session('success') }}</p>
-                        </div>
-                    </div>
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i>
+                    <span>{{ session('success') }}</span>
                 </div>
             @endif
 
             <h2 class="section-title">Hồ sơ cá nhân</h2>
             <div class="profile-info">
-                @if($user->avatar_url)
-                    <img src="{{$user->avatar_url }}" alt="Avatar" 
-                        style="width:60px; height:60px; border-radius:50%; object-fit:cover;">
-                @elseif($user)
-                    <div class="avatar">
-                        {{ substr($user->full_name ?? optional($user)->email, 0, 1) }}
-                    </div>
+                @if($user->avatar_url && Storage::disk('public')->exists($user->avatar_url))
+                    <img src="{{ Storage::url($user->avatar_url) }}?v={{ $user->updated_at?->setTimezone('Asia/Ho_Chi_Minh')->timestamp ?? time() }}" alt="Avatar" class="avatar">
                 @else
-                    <div class="avatar">?</div>
+                    <div class="avatar">
+                        {{ substr($user->full_name ?? $user->email, 0, 1) }}
+                    </div>
                 @endif
 
-                <h3>{{$user->full_name ?? 'Chưa cập nhật' }}</h3>
+                <h3>{{ $user->full_name ?? 'Chưa cập nhật' }}</h3>
                 <p>{{ $user->email ?? 'Không có email' }}</p>
-
-                @if($user->job_title)
-                    <p>{{ $user->job_title }}</p>
-                @endif
             </div>
             <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <div class="form-row">
-                    <div>
-                        <label for="full_name">Họ và tên</label>
-                        <input type="text" id="full_name" name="full_name" value="{{ old('full_name', $user->full_name) }}" required>
-                        @error('full_name')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-                    <div>
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" required>
-                        @error('email')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div>
-                        <label for="phone">Số điện thoại</label>
-                        <input type="text" id="phone" name="phone" value="{{ old('phone', $user->phone) }}">
-                        @error('phone')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-                    <div>
-                        <label for="job_title">Chức vụ</label>
-                        <input type="text" id="job_title" name="job_title" value="{{ old('job_title', $user->job_title) }}">
-                        @error('job_title')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-                <div>
-                    <label for="avatar">Ảnh đại diện</label>
-                    <div style="display: flex; align-items: center;">
-                        <input type="file" id="avatar" name="avatar" accept="image/*" style="margin-bottom:0;">
-                        <span class="file-note">JPG, PNG, GIF tối đa 2MB</span>
-                    </div>
-                    @error('avatar')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
+                <label for="full_name">Họ và tên</label>
+                <input type="text" id="full_name" name="full_name" value="{{ old('full_name', $user->full_name) }}" required>
+                <label for="avatar">Ảnh đại diện</label>
+                <input type="file" id="avatar" name="avatar" accept="image/*">
+                <span class="file-note">JPG, PNG, GIF tối đa 2MB</span>
                 <div class="form-actions">
-                    <button type="submit" class="btn-primary">
-                        <span>Cập nhật</span>
-                    </button>
+                    <button type="submit" class="btn-primary">Cập nhật</button>
                 </div>
             </form>
         </div>
 
+    </div>
+
+    <div class="tab-content {{ ($errors->any() || session('password_success')) ? 'active' : '' }}" id="tab2">
         <div class="form-section">
-            <h2 class="section-title">Đổi mật khẩu</h2>
             @if ($errors->any())
-                <div class="mb-4 bg-red-50 border border-red-200 rounded-md p-4">
-                    <div class="flex">
-                        <i class="fas fa-exclamation-triangle text-red-400"></i>
-                        <div class="ml-3">
-                            <p class="text-sm font-medium text-red-800">{{ $errors->first() }}</p>
-                        </div>
-                    </div>
+                <div class="alert alert-error">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>{{ $errors->first() }}</span>
                 </div>
             @endif
-            <form action="{{ route('change.password') }}" method="POST" class="space-y-6">
+            @if(session('password_success'))
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i>
+                    <span>{{ session('password_success') }}</span>
+                </div>
+            @endif
+            <h2 class="section-title">Đổi mật khẩu</h2>
+            <form action="{{ route('change.password') }}" method="POST">
                 @csrf
-                <div>
-                    <label for="old_password">Mật khẩu cũ</label>
-                    <input type="password" id="old_password" name="old_password" required>
-                    @error('old_password')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                <div>
-                    <label for="new_password">Mật khẩu mới</label>
-                    <input type="password" id="new_password" name="new_password" required>
-                    @error('new_password')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                <div>
-                    <label for="new_password_confirmation">Xác nhận mật khẩu mới</label>
-                    <input type="password" id="new_password_confirmation" name="new_password_confirmation" required>
-                </div>
+                <label for="old_password">Mật khẩu cũ</label>
+                <input type="password" id="old_password" name="old_password" required>
+                <label for="new_password">Mật khẩu mới</label>
+                <input type="password" id="new_password" name="new_password" required>
+                <small class="password-policy">*Mật khẩu phải có ít nhất 8 ký tự, chứa số, chữ hoa, chữ thường và ký tự đặc biệt.</small>
+                <label for="new_password_confirmation">Xác nhận mật khẩu mới</label>
+                <input type="password" id="new_password_confirmation" name="new_password_confirmation" required>
                 <div class="form-actions">
-                    <button type="submit" class="btn-primary">
-                        <span>Đổi mật khẩu</span>
-                    </button>
+                    <button type="submit" class="btn-primary">Đổi mật khẩu</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<script>
+    function openTab(event, tabId) {
+        // Prevent default form submission
+        event.preventDefault();
+
+        // Hide all tab content
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.classList.remove('active');
+        });
+
+        // Remove active class from all buttons
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.classList.remove('active');
+        });
+
+        // Show selected tab content
+        document.getElementById(tabId).classList.add('active');
+
+        // Add active class to clicked button
+        event.target.classList.add('active');
+
+        // Clear any form errors
+        const errorElements = document.querySelectorAll('.alert-error');
+        errorElements.forEach(element => {
+            element.remove();
+        });
+    }
+</script>
 @endsection

@@ -11,6 +11,10 @@ class ProfileController extends Controller
     public function show()
     {
         $user = Auth::user();
+        if ($user) {
+            // Tải lại bản ghi mới nhất từ DB để đảm bảo avatar_url mới được hiển thị
+            $user->refresh();
+        }
         if (!$user) {
             return redirect()->route('login')->withErrors('Bạn cần đăng nhập để xem hồ sơ.');
         }
@@ -23,28 +27,28 @@ class ProfileController extends Controller
 
         $request->validate([
             'full_name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $user->user_id . ',user_id',
-            'phone' => 'nullable|string|max:20',
-            'job_title' => 'nullable|string|max:255',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         // Cập nhật thông tin cơ bản
         $user->full_name = $request->full_name;
-        $user->email = $request->email;
-        $user->phone = $request->phone;
-        $user->job_title = $request->job_title;
 
         // Xử lý upload avatar
-        if ($request->hasFile('avatar')) {
+        if ($request->hasFile('avatar') && $request->file('avatar')->isValid()) {
             // Xóa avatar cũ nếu có
-            if ($user->avatar_url && Storage::disk('public')->exists(str_replace('/storage/', '', $user->avatar_url))) {
-                Storage::disk('public')->delete(str_replace('/storage/', '', $user->avatar_url));
+            if ($user->avatar_url) {
+                $oldPath = str_starts_with($user->avatar_url, '/storage/')
+                    ? str_replace('/storage/', '', $user->avatar_url)
+                    : $user->avatar_url;
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
+                }
             }
 
             // Lưu avatar mới
             $path = $request->file('avatar')->store('avatars', 'public');
-            $user->avatar_url = '/storage/' . $path;
+            // Lưu đường dẫn tương đối (ví dụ: avatars/abc.png). Khi hiển thị sẽ dùng Storage::url()
+            $user->avatar_url = $path;
         }
 
         $user->save();
